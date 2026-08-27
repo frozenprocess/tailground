@@ -1,0 +1,12 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:db\": [\"alice@example.com\"] },\n  \"groups\": { \"group:eng\": [\"alice@example.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web:443\"] },\n    { \"action\": \"accept\", \"src\": [\"tag:web\"], \"dst\": [\"tag:db:5432\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"group:eng\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\", \"tag:web:22\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [{ "id": 1, "email": "alice@example.com" }],
+    "devices": [
+      { "id": 1, "name": "alice-laptop", "user": "alice@example.com", "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "web-1", "tags": ["tag:web"], "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "db-1", "tags": ["tag:db"], "ipv4": "100.64.0.3" }
+    ]
+  },
+  "probes": [{ "name": "https", "proto": "tcp", "port": 443 }]
+}

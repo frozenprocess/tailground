@@ -1,0 +1,106 @@
+{
+  "matrices": {
+    "https": {
+      "1->2": "deny",
+      "1->3": "deny",
+      "1->4": "allow",
+      "2->1": "deny",
+      "2->3": "deny",
+      "2->4": "deny",
+      "3->1": "deny",
+      "3->2": "deny",
+      "3->4": "deny",
+      "4->1": "deny",
+      "4->2": "deny",
+      "4->3": "deny"
+    }
+  },
+  "rules": {
+    "4": [
+      {
+        "srcIPs": [
+          "100.64.0.1-100.64.0.3",
+          "fd7a:115c:a1e0::1-fd7a:115c:a1e0::3"
+        ],
+        "dstPorts": [
+          "100.64.0.4:443",
+          "fd7a:115c:a1e0::4:443"
+        ]
+      }
+    ]
+  },
+  "posture": {
+    "definitions": {
+      "posture:trusted": [
+        "custom:env == 'prod'",
+        "custom:riskScore < '50'"
+      ]
+    },
+    "gates": [
+      {
+        "rule": "acls[0]",
+        "postures": [
+          "posture:trusted"
+        ]
+      }
+    ],
+    "denials": {
+      "2->4": "acls[0] blocked — posture:trusted not met — custom:riskScore is \"90\", need < \"50\"",
+      "3->4": "acls[0] blocked — posture:trusted not met — custom:env is \"dev\", need == \"prod\""
+    }
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "trusted-laptop",
+      "kind": "tagged",
+      "tags": [
+        "tag:client"
+      ],
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "risky-laptop",
+      "kind": "tagged",
+      "tags": [
+        "tag:client"
+      ],
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "dev-laptop",
+      "kind": "tagged",
+      "tags": [
+        "tag:client"
+      ],
+      "ips": [
+        "100.64.0.3",
+        "fd7a:115c:a1e0::3"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "srv-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:srv"
+      ],
+      "ips": [
+        "100.64.0.4",
+        "fd7a:115c:a1e0::4"
+      ]
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

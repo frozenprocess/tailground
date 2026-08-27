@@ -1,0 +1,80 @@
+{
+  "matrices": {
+    "https": {
+      "1->2": "deny",
+      "1->3": "deny",
+      "1->4": "allow",
+      "2->1": "deny",
+      "2->3": "deny",
+      "2->4": "allow",
+      "3->1": "deny",
+      "3->2": "deny",
+      "3->4": "allow",
+      "4->1": "deny",
+      "4->2": "deny",
+      "4->3": "deny"
+    }
+  },
+  "rules": {
+    "4": [
+      {
+        "srcIPs": [
+          "100.64.0.1-100.64.0.3",
+          "fd7a:115c:a1e0::1-fd7a:115c:a1e0::3"
+        ],
+        "dstPorts": [
+          "100.64.0.4:443",
+          "fd7a:115c:a1e0::4:443"
+        ]
+      }
+    ]
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "owner-laptop",
+      "kind": "user",
+      "user": "owner@corp.example",
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "admin-laptop",
+      "kind": "user",
+      "user": "admin@corp.example",
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "member-laptop",
+      "kind": "user",
+      "user": "member@corp.example",
+      "ips": [
+        "100.64.0.3",
+        "fd7a:115c:a1e0::3"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "gw",
+      "kind": "tagged",
+      "tags": [
+        "tag:gw"
+      ],
+      "ips": [
+        "100.64.0.4",
+        "fd7a:115c:a1e0::4"
+      ]
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

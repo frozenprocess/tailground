@@ -1,0 +1,164 @@
+{
+  "matrices": {
+    "https": {
+      "1->2": "deny",
+      "1->3": "deny",
+      "2->1": "deny",
+      "2->3": "deny",
+      "3->1": "deny",
+      "3->2": "deny",
+      "ext:partner/eng-laptop->1": "allow",
+      "ext:partner/eng-laptop->2": "deny",
+      "ext:partner/eng-laptop->3": "deny",
+      "ext:partner/relay->1": "deny",
+      "ext:partner/relay->2": "deny",
+      "ext:partner/relay->3": "deny",
+      "ext:partner/sales-laptop->1": "deny",
+      "ext:partner/sales-laptop->2": "deny",
+      "ext:partner/sales-laptop->3": "deny"
+    },
+    "ssh": {
+      "1->2": "deny",
+      "1->3": "deny",
+      "2->1": "deny",
+      "2->3": "deny",
+      "3->1": "deny",
+      "3->2": "deny",
+      "ext:partner/eng-laptop->1": "deny",
+      "ext:partner/eng-laptop->2": "deny",
+      "ext:partner/eng-laptop->3": "deny",
+      "ext:partner/relay->1": "allow",
+      "ext:partner/relay->2": "deny",
+      "ext:partner/relay->3": "deny",
+      "ext:partner/sales-laptop->1": "deny",
+      "ext:partner/sales-laptop->2": "deny",
+      "ext:partner/sales-laptop->3": "deny"
+    }
+  },
+  "rules": {
+    "1": [
+      {
+        "srcIPs": [
+          "100.127.0.1",
+          "fd7a:115c:a1e0:ffff::1"
+        ],
+        "dstPorts": [
+          "100.64.0.1:443",
+          "fd7a:115c:a1e0::1:443"
+        ],
+        "ipProto": [
+          6
+        ]
+      },
+      {
+        "srcIPs": [
+          "100.127.0.2",
+          "fd7a:115c:a1e0:ffff::2"
+        ],
+        "dstPorts": [
+          "100.64.0.1:22",
+          "fd7a:115c:a1e0::1:22"
+        ],
+        "ipProto": [
+          6
+        ]
+      }
+    ]
+  },
+  "externalShare": {
+    "tailnets": [
+      {
+        "alias": "partner",
+        "externalId": "acme-9f3",
+        "allowIncomingConnections": true,
+        "allowExternalReferencesTo": [
+          "tag:client",
+          "group:ops"
+        ],
+        "configured": true,
+        "referenceable": [
+          2,
+          3
+        ],
+        "nodes": [
+          {
+            "name": "eng-laptop",
+            "groups": [
+              "group:eng"
+            ],
+            "ips": [
+              "100.127.0.1",
+              "fd7a:115c:a1e0:ffff::1"
+            ],
+            "column": "ext:partner/eng-laptop",
+            "inbound": true
+          },
+          {
+            "name": "relay",
+            "tags": [
+              "tag:relay"
+            ],
+            "ips": [
+              "100.127.0.2",
+              "fd7a:115c:a1e0:ffff::2"
+            ],
+            "column": "ext:partner/relay",
+            "inbound": true
+          },
+          {
+            "name": "sales-laptop",
+            "groups": [
+              "group:sales"
+            ],
+            "ips": [
+              "100.127.0.3",
+              "fd7a:115c:a1e0:ffff::3"
+            ],
+            "column": "ext:partner/sales-laptop",
+            "inbound": true
+          }
+        ]
+      }
+    ]
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "srv-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:srv"
+      ],
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "client-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:client"
+      ],
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "bob-laptop",
+      "kind": "user",
+      "user": "bob@corp.example",
+      "ips": [
+        "100.64.0.3",
+        "fd7a:115c:a1e0::3"
+      ]
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

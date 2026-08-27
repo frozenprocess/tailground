@@ -1,0 +1,21 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"autogroup:admin\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"autogroup:admin\"], \"dst\": [\"tag:srv:22\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "owner@corp.example", "role": "owner" },
+      { "id": 2, "email": "admin@corp.example", "role": "admin" },
+      { "id": 3, "email": "net@corp.example", "role": "network-admin" },
+      { "id": 4, "email": "member@corp.example", "role": "member" }
+    ],
+    "devices": [
+      { "id": 1, "name": "owner-laptop", "user": "owner@corp.example", "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "admin-laptop", "user": "admin@corp.example", "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "net-laptop", "user": "net@corp.example", "ipv4": "100.64.0.3" },
+      { "id": 4, "name": "member-laptop", "user": "member@corp.example", "ipv4": "100.64.0.4" },
+      { "id": 5, "name": "srv", "tags": ["tag:srv"], "ipv4": "100.64.0.5" }
+    ]
+  },
+  "probes": [
+    { "name": "ssh", "proto": "tcp", "port": 22 }
+  ]
+}

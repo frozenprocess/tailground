@@ -1,0 +1,19 @@
+{
+  "policy": "{\n  \"postures\": {\n    \"posture:corp\": [\"node:os == 'macos'\", \"node:tsVersion >= '1.80'\"]\n  },\n  \"groups\": { \"group:admin\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:prod\": [\"group:admin\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"group:admin\"], \"srcPosture\": [\"posture:corp\"], \"dst\": [\"tag:prod:22\"] },\n    { \"action\": \"accept\", \"src\": [\"group:admin\"], \"dst\": [\"tag:prod:443\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@example.com" },
+      { "id": 2, "email": "bob@example.com" }
+    ],
+    "devices": [
+      { "id": 1, "name": "alice-macbook", "user": "alice@example.com", "ipv4": "100.64.0.1", "os": "macos", "posture": { "tsVersion": "1.82.0" } },
+      { "id": 2, "name": "bob-linux", "user": "bob@example.com", "ipv4": "100.64.0.2", "os": "linux", "posture": { "tsVersion": "1.82.0" } },
+      { "id": 3, "name": "alice-old-mac", "user": "alice@example.com", "ipv4": "100.64.0.3", "os": "macos", "posture": { "tsVersion": "1.70.0" } },
+      { "id": 4, "name": "prod-1", "tags": ["tag:prod"], "ipv4": "100.64.0.4", "os": "linux" }
+    ]
+  },
+  "probes": [
+    { "name": "ssh", "proto": "tcp", "port": 22 },
+    { "name": "https", "proto": "tcp", "port": 443 }
+  ]
+}

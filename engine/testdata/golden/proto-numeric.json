@@ -1,0 +1,18 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:a\": [\"u@e.com\"], \"tag:b\": [\"u@e.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:*\"], \"proto\": \"gre\" },\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:*\"], \"proto\": \"ipv4\" },\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:*\"], \"proto\": \"icmp\" },\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:443\"], \"proto\": \"tcp\" }\n  ]\n}",
+  "snapshot": {
+    "users": [{ "id": 1, "email": "u@e.com" }],
+    "devices": [
+      { "id": 1, "name": "a-1", "tags": ["tag:a"], "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "b-1", "tags": ["tag:b"], "ipv4": "100.64.0.2" }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 },
+    { "name": "gre", "proto": "gre" },
+    { "name": "ipip", "proto": "ipv4" },
+    { "name": "ip:47", "proto": "47" },
+    { "name": "icmp", "proto": "icmp" },
+    { "name": "udp:53", "proto": "udp", "port": 53 }
+  ]
+}

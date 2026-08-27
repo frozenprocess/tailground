@@ -1,0 +1,18 @@
+{
+  "policy": "{\"ipsets\":{\"ipset:corp\":[\"100.64.0.1/32\",\"100.64.0.2/32\"],\"ipset:all\":[\"ipset:corp\",\"100.64.0.100-100.64.0.120\"]},\"tagOwners\":{\"tag:web\":[\"alice@example.com\"]},\"acls\":[{\"action\":\"accept\",\"src\":[\"ipset:all\"],\"dst\":[\"tag:web:22\"]},{\"action\":\"accept\",\"src\":[\"ipset:ghost\"],\"dst\":[\"tag:web:443\"]}]}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@example.com" },
+      { "id": 2, "email": "bob@example.com" }
+    ],
+    "devices": [
+      { "id": 1, "name": "alice-laptop", "user": "alice@example.com", "ipv4": "100.64.0.1", "os": "linux" },
+      { "id": 2, "name": "bob-laptop", "user": "bob@example.com", "ipv4": "100.64.0.2", "os": "linux" },
+      { "id": 3, "name": "web-1", "tags": ["tag:web"], "ipv4": "100.64.0.3", "os": "linux" }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 },
+    { "name": "ssh", "proto": "tcp", "port": 22 }
+  ]
+}

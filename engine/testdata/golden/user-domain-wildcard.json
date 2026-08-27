@@ -1,0 +1,19 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"user:*@corp.example\"], \"dst\": [\"tag:srv:22\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@corp.example" },
+      { "id": 2, "email": "bob@corp.example" },
+      { "id": 3, "email": "carol@other.example" }
+    ],
+    "devices": [
+      { "id": 1, "name": "alice-laptop", "user": "alice@corp.example", "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "bob-laptop", "user": "bob@corp.example", "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "carol-laptop", "user": "carol@other.example", "ipv4": "100.64.0.3" },
+      { "id": 4, "name": "srv", "tags": ["tag:srv"], "ipv4": "100.64.0.4" }
+    ]
+  },
+  "probes": [
+    { "name": "ssh", "proto": "tcp", "port": 22 }
+  ]
+}

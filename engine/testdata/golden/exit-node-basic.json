@@ -1,0 +1,17 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:exit\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"alice@corp.example\"], \"dst\": [\"autogroup:internet:*\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@corp.example" },
+      { "id": 2, "email": "bob@corp.example" }
+    ],
+    "devices": [
+      { "id": 1, "name": "alice-laptop", "user": "alice@corp.example", "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "bob-laptop", "user": "bob@corp.example", "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "exit", "tags": ["tag:exit"], "ipv4": "100.64.0.3", "routes": ["0.0.0.0/0", "::/0"], "routesApproved": ["0.0.0.0/0", "::/0"] }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 }
+  ]
+}

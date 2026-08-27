@@ -1,0 +1,16 @@
+{
+  "policy": "{\"tagOwners\":{\"tag:conn\":[\"alice@example.com\"],\"tag:web\":[\"alice@example.com\"]},\"acls\":[{\"action\":\"accept\",\"src\":[\"*\"],\"dst\":[\"*:*\"]}],\"nodeAttrs\":[{\"target\":[\"tag:conn\"],\"app\":{\"tailscale.com/app-connectors\":[{\"name\":\"github\",\"domains\":[\"github.com\"]}]}},{\"target\":[\"alice@example.com\"],\"attr\":[\"mycorp.example/cap/beta\"],\"app\":{\"tailscale.com/cap/relay\":[{\"allow\":true}]}}]}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@example.com" }
+    ],
+    "devices": [
+      { "id": 1, "name": "alice-laptop", "user": "alice@example.com", "ipv4": "100.64.0.1", "os": "macos" },
+      { "id": 2, "name": "conn-1", "tags": ["tag:conn"], "ipv4": "100.64.0.2", "os": "linux" },
+      { "id": 3, "name": "web-1", "tags": ["tag:web"], "ipv4": "100.64.0.3", "os": "linux" }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "policy": "{\n  \"acls\": [ { \"action\": \"accept\", \"src\": [\"autogroup:member\"], \"dst\": [\"autogroup:self:*\"] } ]\n}",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1"
+      },
+      {
+        "id": 2,
+        "name": "alice-phone",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.2"
+      },
+      {
+        "id": 3,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.3"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

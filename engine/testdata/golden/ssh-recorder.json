@@ -1,0 +1,17 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:prod\": [\"alice@example.com\"], \"tag:recorder\": [\"alice@example.com\"] },\n  \"ssh\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:prod\"], \"users\": [\"ubuntu\"], \"recorder\": [\"tag:recorder\"], \"enforceRecorder\": true }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@example.com" }
+    ],
+    "devices": [
+      { "id": 1, "name": "alice-laptop", "user": "alice@example.com", "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "prod", "tags": ["tag:prod"], "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "rec", "tags": ["tag:recorder"], "ipv4": "100.64.0.3" }
+    ]
+  },
+  "probes": [
+    { "name": "ssh", "proto": "tcp", "port": 22 }
+  ],
+  "sshUsers": ["ubuntu"]
+}

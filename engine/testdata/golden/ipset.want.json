@@ -1,0 +1,80 @@
+{
+  "matrices": {
+    "https": {
+      "1->2": "deny",
+      "1->3": "deny",
+      "2->1": "deny",
+      "2->3": "deny",
+      "3->1": "deny",
+      "3->2": "deny"
+    },
+    "ssh": {
+      "1->2": "deny",
+      "1->3": "allow",
+      "2->1": "deny",
+      "2->3": "allow",
+      "3->1": "deny",
+      "3->2": "deny"
+    }
+  },
+  "rules": {
+    "3": [
+      {
+        "srcIPs": [
+          "100.64.0.1-100.64.0.2",
+          "100.64.0.100-100.64.0.120"
+        ],
+        "dstPorts": [
+          "100.64.0.3:22",
+          "fd7a:115c:a1e0::3:22"
+        ]
+      }
+    ]
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "alice-laptop",
+      "kind": "user",
+      "user": "alice@example.com",
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "bob-laptop",
+      "kind": "user",
+      "user": "bob@example.com",
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "web-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:web"
+      ],
+      "ips": [
+        "100.64.0.3",
+        "fd7a:115c:a1e0::3"
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "policy",
+      "pointer": "1:256",
+      "message": "acls[1].src references \"ipset:ghost\", which no ipsets entry defines; the entry was dropped"
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:client\": [\"alice@corp.example\"], \"tag:api\": [\"alice@corp.example\"], \"tag:other\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"tag:client\"], \"dst\": [\"svc:payments:443\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@corp.example" }
+    ],
+    "devices": [
+      { "id": 1, "name": "client-1", "tags": ["tag:client"], "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "api-1", "tags": ["tag:api"], "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "api-2", "tags": ["tag:api"], "ipv4": "100.64.0.3" },
+      { "id": 4, "name": "outsider", "tags": ["tag:other"], "ipv4": "100.64.0.4" }
+    ],
+    "services": [
+      { "name": "svc:payments", "vip": "100.96.0.10", "backends": [2, 3] }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 },
+    { "name": "http", "proto": "tcp", "port": 80 }
+  ]
+}

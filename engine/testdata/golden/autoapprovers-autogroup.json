@@ -1,0 +1,19 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:gw\": [\"owner@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"autogroup:member\"], \"dst\": [\"tag:gw:443\"] }\n  ],\n  \"autoApprovers\": {\n    \"routes\": { \"10.10.0.0/24\": [\"autogroup:admin\"] },\n    \"exitNode\": [\"autogroup:owner\", \"tag:gw\"]\n  }\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "owner@corp.example", "role": "owner" },
+      { "id": 2, "email": "admin@corp.example", "role": "admin" },
+      { "id": 3, "email": "member@corp.example", "role": "member" }
+    ],
+    "devices": [
+      { "id": 1, "name": "owner-laptop", "user": "owner@corp.example", "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "admin-laptop", "user": "admin@corp.example", "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "member-laptop", "user": "member@corp.example", "ipv4": "100.64.0.3" },
+      { "id": 4, "name": "gw", "tags": ["tag:gw"], "ipv4": "100.64.0.4" }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 }
+  ]
+}

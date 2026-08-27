@@ -1,0 +1,102 @@
+{
+  "matrices": {
+    "ssh": {
+      "1->2": "allow",
+      "1->3": "allow",
+      "2->1": "allow",
+      "2->3": "allow",
+      "3->1": "allow",
+      "3->2": "allow"
+    }
+  },
+  "rules": {
+    "1": [
+      {
+        "srcIPs": [
+          "*"
+        ],
+        "dstPorts": [
+          "*:*"
+        ]
+      }
+    ],
+    "2": [
+      {
+        "srcIPs": [
+          "*"
+        ],
+        "dstPorts": [
+          "*:*"
+        ]
+      }
+    ],
+    "3": [
+      {
+        "srcIPs": [
+          "*"
+        ],
+        "dstPorts": [
+          "*:*"
+        ]
+      }
+    ]
+  },
+  "ssh": {
+    "alice@1->2": "deny",
+    "alice@1->3": "accept",
+    "alice@2->1": "deny",
+    "alice@2->3": "deny",
+    "alice@3->1": "deny",
+    "alice@3->2": "deny",
+    "bob@1->2": "deny",
+    "bob@1->3": "deny",
+    "bob@2->1": "deny",
+    "bob@2->3": "deny",
+    "bob@3->1": "deny",
+    "bob@3->2": "deny",
+    "root@1->2": "deny",
+    "root@1->3": "deny",
+    "root@2->1": "deny",
+    "root@2->3": "deny",
+    "root@3->1": "deny",
+    "root@3->2": "deny"
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "alice-laptop",
+      "kind": "user",
+      "user": "alice@corp.example",
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "bob-laptop",
+      "kind": "user",
+      "user": "bob@other.example",
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "srv",
+      "kind": "tagged",
+      "tags": [
+        "tag:srv"
+      ],
+      "ips": [
+        "100.64.0.3",
+        "fd7a:115c:a1e0::3"
+      ]
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

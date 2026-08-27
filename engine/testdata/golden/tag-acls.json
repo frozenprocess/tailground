@@ -1,0 +1,61 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:ci\": [\"alice@example.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:web:443\"] },\n    { \"action\": \"accept\", \"src\": [\"tag:ci\"], \"dst\": [\"tag:web:22\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "web-1",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.3",
+        "os": "linux"
+      },
+      {
+        "id": 4,
+        "name": "ci-1",
+        "tags": [
+          "tag:ci"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

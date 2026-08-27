@@ -1,0 +1,82 @@
+{
+  "matrices": {
+    "https": {
+      "1->2": "deny",
+      "2->1": "allow"
+    },
+    "ssh": {
+      "1->2": "deny",
+      "2->1": "deny"
+    }
+  },
+  "rules": {
+    "1": [
+      {
+        "srcIPs": [
+          "100.64.0.2",
+          "fd7a:115c:a1e0::2"
+        ],
+        "dstPorts": [
+          "100.64.0.1:443",
+          "fd7a:115c:a1e0::1:443"
+        ]
+      }
+    ]
+  },
+  "externalShare": {
+    "tailnets": [
+      {
+        "alias": "partner",
+        "externalId": "p1",
+        "allowIncomingConnections": false,
+        "configured": true,
+        "referenceable": [],
+        "nodes": [
+          {
+            "name": "eng-box",
+            "groups": [
+              "group:eng"
+            ],
+            "ips": [
+              "100.127.0.1",
+              "fd7a:115c:a1e0:ffff::1"
+            ],
+            "column": "ext:partner/eng-box",
+            "inbound": false
+          }
+        ]
+      }
+    ],
+    "warnings": [
+      "external tailnet \"partner\" does not set allowIncomingConnections; its shared nodes cannot initiate connections into this tailnet"
+    ]
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "srv-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:srv"
+      ],
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "guest-laptop",
+      "kind": "user",
+      "user": "guest@partner.example",
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

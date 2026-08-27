@@ -1,0 +1,17 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:client\": [\"alice@corp.example\"], \"tag:srv\": [\"alice@corp.example\"] },\n  \"attrConfig\": {\n    \"custom:env\": { \"type\": \"string\" },\n    \"custom:riskScore\": { \"type\": \"number\" }\n  },\n  \"postures\": {\n    \"posture:trusted\": [\"custom:env == 'prod'\", \"custom:riskScore < '50'\"]\n  },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"tag:client\"], \"srcPosture\": [\"posture:trusted\"], \"dst\": [\"tag:srv:443\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@corp.example" }
+    ],
+    "devices": [
+      { "id": 1, "name": "trusted-laptop", "tags": ["tag:client"], "ipv4": "100.64.0.1", "posture": { "custom:env": "prod", "custom:riskScore": "10" } },
+      { "id": 2, "name": "risky-laptop", "tags": ["tag:client"], "ipv4": "100.64.0.2", "posture": { "custom:env": "prod", "custom:riskScore": "90" } },
+      { "id": 3, "name": "dev-laptop", "tags": ["tag:client"], "ipv4": "100.64.0.3", "posture": { "custom:env": "dev", "custom:riskScore": "5" } },
+      { "id": 4, "name": "srv-1", "tags": ["tag:srv"], "ipv4": "100.64.0.4" }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 }
+  ]
+}

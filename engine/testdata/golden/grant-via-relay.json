@@ -1,0 +1,18 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:relay\": [\"alice@corp.example\"], \"tag:app\": [\"alice@corp.example\"] },\n  \"grants\": [\n    { \"src\": [\"tag:app\"], \"dst\": [\"10.99.0.0/24\"], \"ip\": [\"tcp:80\"], \"via\": [\"tag:relay\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@corp.example" }
+    ],
+    "devices": [
+      { "id": 1, "name": "app-1", "tags": ["tag:app"], "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "other", "user": "alice@corp.example", "ipv4": "100.64.0.2" },
+      { "id": 3, "name": "relay", "tags": ["tag:relay"], "ipv4": "100.64.0.3", "routes": ["10.99.0.0/24"], "routesApproved": ["10.99.0.0/24"] },
+      { "id": 4, "name": "relay-unapproved", "tags": ["tag:relay"], "ipv4": "100.64.0.4", "routes": ["10.99.0.0/24"] }
+    ]
+  },
+  "probes": [
+    { "name": "http", "proto": "tcp", "port": 80 },
+    { "name": "https", "proto": "tcp", "port": 443 }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "policy": "{\n  \"externalTailnets\": {\n    \"partner\": { \"externalID\": \"acme-9f3\", \"allowIncomingConnections\": true, \"allowExternalReferencesTo\": [\"tag:client\", \"group:ops\"] }\n  },\n  \"groups\": { \"group:ops\": [\"bob@corp.example\"] },\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"], \"tag:client\": [\"alice@corp.example\"] },\n  \"grants\": [\n    { \"src\": [\"group://partner/eng\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"tag://partner/relay\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:22\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@corp.example"
+      },
+      {
+        "id": 2,
+        "email": "bob@corp.example"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "srv-1",
+        "tags": [
+          "tag:srv"
+        ],
+        "ipv4": "100.64.0.1"
+      },
+      {
+        "id": 2,
+        "name": "client-1",
+        "tags": [
+          "tag:client"
+        ],
+        "ipv4": "100.64.0.2"
+      },
+      {
+        "id": 3,
+        "name": "bob-laptop",
+        "user": "bob@corp.example",
+        "ipv4": "100.64.0.3"
+      }
+    ],
+    "externalTailnets": [
+      {
+        "alias": "partner",
+        "nodes": [
+          {
+            "name": "eng-laptop",
+            "groups": [
+              "eng"
+            ]
+          },
+          {
+            "name": "relay",
+            "tags": [
+              "relay"
+            ]
+          },
+          {
+            "name": "sales-laptop",
+            "groups": [
+              "sales"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "policy": "{\n  \"tagOwners\": { \"tag:prod\": [\"alice@example.com\"] },\n  \"ssh\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:prod\"], \"users\": [\"ubuntu\", \"root\"] },\n    { \"action\": \"check\",  \"src\": [\"group:ops\"],         \"dst\": [\"tag:prod\"], \"users\": [\"autogroup:nonroot\"] }\n  ],\n  \"groups\": { \"group:ops\": [\"bob@example.com\"] }\n}",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.2"
+      },
+      {
+        "id": 3,
+        "name": "prod",
+        "tags": [
+          "tag:prod"
+        ],
+        "ipv4": "100.64.0.3"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ],
+  "sshUsers": [
+    "root",
+    "ubuntu"
+  ]
+}

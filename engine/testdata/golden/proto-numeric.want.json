@@ -1,0 +1,114 @@
+{
+  "matrices": {
+    "gre": {
+      "1->2": "allow",
+      "2->1": "deny"
+    },
+    "https": {
+      "1->2": "allow",
+      "2->1": "deny"
+    },
+    "icmp": {
+      "1->2": "allow",
+      "2->1": "deny"
+    },
+    "ip:47": {
+      "1->2": "allow",
+      "2->1": "deny"
+    },
+    "ipip": {
+      "1->2": "allow",
+      "2->1": "deny"
+    },
+    "udp:53": {
+      "1->2": "deny",
+      "2->1": "deny"
+    }
+  },
+  "rules": {
+    "2": [
+      {
+        "srcIPs": [
+          "100.64.0.1",
+          "fd7a:115c:a1e0::1"
+        ],
+        "dstPorts": [
+          "100.64.0.2:*",
+          "fd7a:115c:a1e0::2:*"
+        ],
+        "ipProto": [
+          47
+        ]
+      },
+      {
+        "srcIPs": [
+          "100.64.0.1",
+          "fd7a:115c:a1e0::1"
+        ],
+        "dstPorts": [
+          "100.64.0.2:*",
+          "fd7a:115c:a1e0::2:*"
+        ],
+        "ipProto": [
+          4
+        ]
+      },
+      {
+        "srcIPs": [
+          "100.64.0.1",
+          "fd7a:115c:a1e0::1"
+        ],
+        "dstPorts": [
+          "100.64.0.2:*",
+          "fd7a:115c:a1e0::2:*"
+        ],
+        "ipProto": [
+          1
+        ]
+      },
+      {
+        "srcIPs": [
+          "100.64.0.1",
+          "fd7a:115c:a1e0::1"
+        ],
+        "dstPorts": [
+          "100.64.0.2:443",
+          "fd7a:115c:a1e0::2:443"
+        ],
+        "ipProto": [
+          6
+        ]
+      }
+    ]
+  },
+  "actors": [
+    {
+      "id": 1,
+      "name": "a-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:a"
+      ],
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "b-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:b"
+      ],
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}

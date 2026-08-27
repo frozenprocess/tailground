@@ -1,0 +1,25 @@
+{
+  "policy": "{\n  \"externalTailnets\": {\n    \"partner\": { \"externalID\": \"p1\" }\n  },\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"autogroup:shared\"], \"dst\": [\"tag:srv:443\"] }\n  ]\n}",
+  "snapshot": {
+    "users": [
+      { "id": 1, "email": "alice@corp.example" },
+      { "id": 2, "email": "guest@partner.example", "shared": true }
+    ],
+    "devices": [
+      { "id": 1, "name": "srv-1", "tags": ["tag:srv"], "ipv4": "100.64.0.1" },
+      { "id": 2, "name": "guest-laptop", "user": "guest@partner.example", "ipv4": "100.64.0.2" }
+    ],
+    "externalTailnets": [
+      {
+        "alias": "partner",
+        "nodes": [
+          { "name": "eng-box", "groups": ["eng"] }
+        ]
+      }
+    ]
+  },
+  "probes": [
+    { "name": "https", "proto": "tcp", "port": 443 },
+    { "name": "ssh", "proto": "tcp", "port": 22 }
+  ]
+}

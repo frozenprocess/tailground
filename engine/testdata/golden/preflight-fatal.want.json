@@ -1,0 +1,61 @@
+{
+  "matrices": {},
+  "actors": [
+    {
+      "id": 1,
+      "name": "alice-laptop",
+      "kind": "user",
+      "user": "alice@example.com",
+      "ips": [
+        "100.64.0.1",
+        "fd7a:115c:a1e0::1"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "bob-laptop",
+      "kind": "user",
+      "user": "bob@example.com",
+      "ips": [
+        "100.64.0.2",
+        "fd7a:115c:a1e0::2"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "web-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:web"
+      ],
+      "ips": [
+        "100.64.0.3",
+        "fd7a:115c:a1e0::3"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "ci-1",
+      "kind": "tagged",
+      "tags": [
+        "tag:ci"
+      ],
+      "ips": [
+        "100.64.0.4",
+        "fd7a:115c:a1e0::4"
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "limit",
+      "pointer": "3:43",
+      "message": "\"autogroup:frobnicate\" may be valid on Tailscale, but Tailground can't evaluate it — remove or replace it here to see results"
+    }
+  ],
+  "engine": {
+    "headscaleCommit": "",
+    "tailscaleVersion": ""
+  }
+}
