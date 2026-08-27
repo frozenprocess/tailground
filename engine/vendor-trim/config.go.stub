@@ -1,0 +1,13 @@
+package types
+
+type Config struct {
+	BaseDomain string
+
+	Taildrop struct {
+		Enabled bool
+	}
+
+	AutoUpdate struct {
+		Enabled bool
+	}
+}

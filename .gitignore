@@ -1,0 +1,17 @@
+/bin/
+/web/public/engine.wasm
+/web/public/wasm_exec.js
+/web/node_modules/
+/web/dist/
+*.test
+vendor/
+/e2e/.run/
+/e2e/e2eprobe/e2eprobe
+/e2eprobe
+.env
+*.env
+/e2e/.art*
+/e2e/report.txt
+
+# prod-backup output (contains user scenarios)
+backups/
