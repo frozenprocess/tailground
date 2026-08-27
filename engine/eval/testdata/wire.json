@@ -1,0 +1,328 @@
+{
+  "request": {
+    "policy": "{}",
+    "snapshot": {
+      "users": [
+        {
+          "id": 1,
+          "email": "alice@example.com",
+          "role": "admin",
+          "shared": true
+        }
+      ],
+      "groups": {
+        "group:eng": [
+          "alice@example.com"
+        ]
+      },
+      "hosts": {
+        "db": "100.64.0.2"
+      },
+      "devices": [
+        {
+          "id": 1,
+          "name": "laptop",
+          "user": "alice@example.com",
+          "tags": [
+            "tag:web"
+          ],
+          "ipv4": "100.64.0.1",
+          "ipv6": "fd7a:115c:a1e0::1",
+          "os": "linux",
+          "routes": [
+            "10.0.0.0/24"
+          ],
+          "routesApproved": [
+            "10.0.0.0/24"
+          ],
+          "posture": {
+            "node:os": "linux"
+          }
+        }
+      ],
+      "services": [
+        {
+          "name": "web",
+          "vip": "100.96.0.1",
+          "backends": [
+            1
+          ]
+        }
+      ],
+      "externalTailnets": [
+        {
+          "alias": "corp",
+          "nodes": [
+            {
+              "name": "relay",
+              "tags": [
+                "tag:web"
+              ],
+              "groups": [
+                "group:eng"
+              ],
+              "ipv4": "100.64.1.1",
+              "ipv6": "fd7a:115c:a1e0::2"
+            }
+          ]
+        }
+      ]
+    },
+    "probes": [
+      {
+        "name": "https",
+        "proto": "tcp",
+        "port": 443
+      }
+    ],
+    "sshUsers": [
+      "root",
+      "ubuntu"
+    ]
+  },
+  "result": {
+    "matrices": {
+      "https": {
+        "1->2": "allow",
+        "2->1": "deny",
+        "1->route:10.0.0.0/24@1": "allow",
+        "1->svc:web": "allow",
+        "ext:corp/relay->1": "deny"
+      }
+    },
+    "grants": {
+      "1->2": [
+        "example.com/cap"
+      ]
+    },
+    "nodeCaps": {
+      "1": {
+        "example.com/cap": [
+          "{}"
+        ]
+      }
+    },
+    "rules": {
+      "1": [
+        {
+          "srcIPs": [
+            "*"
+          ],
+          "dstPorts": [
+            "100.64.0.1/32:443"
+          ],
+          "ipProto": [
+            6
+          ],
+          "capGrant": [
+            "100.64.0.1 => example.com/cap"
+          ]
+        }
+      ]
+    },
+    "ssh": {
+      "root@1->2": "accept",
+      "ubuntu@1->2": "check",
+      "root@2->1": "reject",
+      "ubuntu@2->1": "deny"
+    },
+    "posture": {
+      "definitions": {
+        "posture:linux": [
+          "node:os == 'linux'"
+        ]
+      },
+      "defaultSrcPosture": [
+        "posture:linux"
+      ],
+      "gates": [
+        {
+          "rule": "acls[0]",
+          "postures": [
+            "posture:linux"
+          ],
+          "default": true
+        }
+      ],
+      "denials": {
+        "2->1": "posture mismatch"
+      },
+      "warnings": [
+        "example warning"
+      ]
+    },
+    "routes": {
+      "paths": [
+        {
+          "prefix": "10.0.0.0/24",
+          "exit": false,
+          "routerId": 1,
+          "router": "laptop",
+          "approved": true,
+          "probe": "10.0.0.1",
+          "column": "route:10.0.0.0/24@1"
+        }
+      ],
+      "warnings": [
+        "example warning"
+      ]
+    },
+    "services": {
+      "paths": [
+        {
+          "name": "svc:web",
+          "vip": "100.96.0.1",
+          "backends": [
+            1
+          ],
+          "column": "svc:web"
+        }
+      ],
+      "warnings": [
+        "example warning"
+      ]
+    },
+    "externalShare": {
+      "tailnets": [
+        {
+          "alias": "corp",
+          "externalId": "corp.example",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:web"
+          ],
+          "configured": true,
+          "referenceable": [
+            1
+          ],
+          "nodes": [
+            {
+              "name": "relay",
+              "tags": [
+                "tag:web"
+              ],
+              "groups": [
+                "group:eng"
+              ],
+              "ips": [
+                "100.64.1.1"
+              ],
+              "column": "ext:corp/relay",
+              "inbound": true
+            }
+          ]
+        }
+      ],
+      "warnings": [
+        "example warning"
+      ]
+    },
+    "tests": {
+      "acl": {
+        "passed": true,
+        "cases": [
+          {
+            "label": "https",
+            "expect": "reachable",
+            "pass": true,
+            "detail": "allowed"
+          }
+        ],
+        "rawFailures": [
+          "example"
+        ]
+      },
+      "ssh": {
+        "passed": false,
+        "cases": [
+          {
+            "label": "root",
+            "expect": "blocked",
+            "pass": false,
+            "detail": "accepted"
+          },
+          {
+            "label": "ubuntu",
+            "expect": "via check",
+            "pass": true
+          }
+        ],
+        "rawFailures": [
+          "example"
+        ]
+      }
+    },
+    "actors": [
+      {
+        "id": 1,
+        "name": "laptop",
+        "kind": "user",
+        "user": "alice@example.com",
+        "tags": [
+          "tag:web"
+        ],
+        "ips": [
+          "100.64.0.1"
+        ]
+      },
+      {
+        "id": 2,
+        "name": "web",
+        "kind": "tagged",
+        "ips": []
+      }
+    ],
+    "diagnostics": [
+      {
+        "severity": "warning",
+        "code": "snapshot",
+        "pointer": "1:2",
+        "target": "device:laptop",
+        "message": "example warning"
+      },
+      {
+        "severity": "info",
+        "code": "limit",
+        "message": "example info"
+      },
+      {
+        "severity": "error",
+        "code": "parse",
+        "message": "example error"
+      },
+      {
+        "severity": "error",
+        "code": "policy",
+        "message": "example policy error"
+      },
+      {
+        "severity": "error",
+        "code": "internal",
+        "message": "example internal error"
+      }
+    ],
+    "engine": {
+      "headscaleCommit": "fixture",
+      "tailscaleVersion": "fixture",
+      "capabilities": [
+        { "id": "fixture.cap", "group": "headscale", "name": "`acls`", "notes": "fixture note" }
+      ]
+    }
+  },
+  "minimalRequest": {
+    "policy": "{}",
+    "snapshot": {
+      "users": [],
+      "devices": []
+    },
+    "probes": []
+  },
+  "minimalResult": {
+    "matrices": {},
+    "actors": [],
+    "engine": {
+      "headscaleCommit": "",
+      "tailscaleVersion": ""
+    }
+  }
+}
