@@ -5,7 +5,7 @@ TRIM_STUB  := engine/vendor-trim/config.go.stub
 TRIM_DEST  := vendor/github.com/juanfont/headscale/hscontrol/types/config.go
 CAP_PATCH  := engine/vendor-trim/capabilities.patch
 
-.PHONY: help vendor test build wasm wasm-exec size spike clean
+.PHONY: help vendor test build wasm wasm-exec size spike web-install web-dev web-build clean
 
 help:
 	@echo "Tailground:"
@@ -15,6 +15,9 @@ help:
 	@echo "  make wasm        - build web/public/engine.wasm (+ wasm_exec.js)"
 	@echo "  make size        - build wasm and report raw + gzip sizes"
 	@echo "  make spike       - make wasm, then serve web/public on :8080 (open /spike.html)"
+	@echo "  make web-install - npm install for the SPA"
+	@echo "  make web-dev     - build the engine, then run the Vite dev server"
+	@echo "  make web-build   - build the engine + the static SPA into web/dist"
 
 vendor:
 	$(GO) mod vendor
@@ -44,6 +47,16 @@ size: wasm
 spike: wasm
 	@echo "open http://localhost:8080/spike.html"
 	@cd web/public && python3 -m http.server 8080
+
+web-install:
+	cd web && npm install
+
+web-dev: wasm
+	cd web && npm run dev
+
+web-build: wasm
+	cd web && npm run build
+	@echo "static site in web/dist"
 
 clean:
 	rm -rf bin $(WASM_OUT) $(WASM_EXEC) web/dist
