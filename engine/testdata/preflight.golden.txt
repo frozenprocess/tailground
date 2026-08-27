@@ -1,0 +1,890 @@
+=== golden/allow-all.json
+{
+  "Policy": "{}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/autoapprovers-autogroup.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:gw\": [\"owner@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"autogroup:member\"], \"dst\": [\"tag:gw:443\"] }\n  ],\n  \"autoApprovers\": {\n    \"routes\": { \"10.10.0.0/24\": [\"admin@corp.example\",\"owner@corp.example\"] },\n    \"exitNode\": [\"owner@corp.example\", \"tag:gw\"]\n  }\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/autogroup-admin.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"admin@corp.example\",\"owner@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"admin@corp.example\",\"owner@corp.example\"], \"dst\": [\"tag:srv:22\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/autogroup-member.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:ci\": [\"alice@example.com\"] },\n  \"acls\": [ { \"action\": \"accept\", \"src\": [\"tag:ci\"], \"dst\": [\"autogroup:member:*\"] } ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/autogroup-self.json
+{
+  "Policy": "{\n  \"acls\": [ { \"action\": \"accept\", \"src\": [\"autogroup:member\"], \"dst\": [\"autogroup:self:*\"] } ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/autogroup-shared.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"owner@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"guest@partner.example\"], \"dst\": [\"tag:srv:443\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/default-deny.json
+{
+  "Policy": "{ \"acls\": [] }",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/exit-node-basic.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:exit\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"alice@corp.example\"], \"dst\": [\"autogroup:internet:*\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/extshare-basic.json
+{
+  "Policy": "{\n  \"groups\": { \"group:ops\": [\"bob@corp.example\"] },\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"], \"tag:client\": [\"alice@corp.example\"] },\n  \"grants\": [\n    { \"src\": [\"100.127.0.1\",\"fd7a:115c:a1e0:ffff::1\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"100.127.0.2\",\"fd7a:115c:a1e0:ffff::2\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:22\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": {
+    "Tailnets": [
+      {
+        "Alias": "partner",
+        "ExternalID": "acme-9f3",
+        "AllowIncomingConnections": true,
+        "AllowExternalReferencesTo": [
+          "tag:client",
+          "group:ops"
+        ],
+        "Configured": true,
+        "ExposedUsers": [
+          "bob@corp.example"
+        ],
+        "Nodes": [
+          {
+            "Name": "eng-laptop",
+            "Tags": null,
+            "Groups": [
+              "group:eng"
+            ],
+            "IPv4": "100.127.0.1",
+            "IPv6": "fd7a:115c:a1e0:ffff::1"
+          },
+          {
+            "Name": "relay",
+            "Tags": [
+              "tag:relay"
+            ],
+            "Groups": null,
+            "IPv4": "100.127.0.2",
+            "IPv6": "fd7a:115c:a1e0:ffff::2"
+          },
+          {
+            "Name": "sales-laptop",
+            "Tags": null,
+            "Groups": [
+              "group:sales"
+            ],
+            "IPv4": "100.127.0.3",
+            "IPv6": "fd7a:115c:a1e0:ffff::3"
+          }
+        ]
+      }
+    ]
+  }
+}
+=== golden/extshare-shared-autogroup.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"guest@partner.example\"], \"dst\": [\"tag:srv:443\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": {
+    "Tailnets": [
+      {
+        "Alias": "partner",
+        "ExternalID": "p1",
+        "AllowIncomingConnections": false,
+        "AllowExternalReferencesTo": null,
+        "Configured": true,
+        "ExposedUsers": null,
+        "Nodes": [
+          {
+            "Name": "eng-box",
+            "Tags": null,
+            "Groups": [
+              "group:eng"
+            ],
+            "IPv4": "100.127.0.1",
+            "IPv6": "fd7a:115c:a1e0:ffff::1"
+          }
+        ]
+      }
+    ]
+  }
+}
+=== golden/grant-via-relay.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:relay\": [\"alice@corp.example\"], \"tag:app\": [\"alice@corp.example\"] },\n  \"grants\": [\n    { \"src\": [\"tag:app\"], \"dst\": [\"10.99.0.0/24\"], \"ip\": [\"tcp:80\"], \"via\": [\"tag:relay\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/grants-app.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"] },\n  \"grants\": [\n    { \"src\": [\"alice@example.com\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"alice@example.com\"], \"dst\": [\"tag:web\"], \"app\": { \"example.com/cap/admin\": [ { \"role\": \"admin\" } ] } }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/groups.json
+{
+  "Policy": "{\n  \"groups\": { \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:web\": [\"group:eng\"] },\n  \"acls\": [ { \"action\": \"accept\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web:443\"] } ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/hosts.json
+{
+  "Policy": "{\n  \"hosts\": { \"lan\": \"100.64.0.0/24\" },\n  \"groups\": { \"group:eng\": [\"alice@example.com\"] },\n  \"acls\": [ { \"action\": \"accept\", \"src\": [\"group:eng\"], \"dst\": [\"lan:22\"] } ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/ipset.json
+{
+  "Policy": "{\"tagOwners\":{\"tag:web\":[\"alice@example.com\"]},\"acls\":[{\"action\":\"accept\",\"src\":[\"100.64.0.1/32\",\"100.64.0.2/32\",\"100.64.0.100/30\",\"100.64.0.104/29\",\"100.64.0.112/29\",\"100.64.0.120/32\"],\"dst\":[\"tag:web:22\"]},{\"action\":\"accept\",\"src\":[],\"dst\":[\"tag:web:443\"]}]}",
+  "Diagnostics": [
+    {
+      "severity": "warning",
+      "code": "policy",
+      "pointer": "1:256",
+      "message": "acls[1].src references \"ipset:ghost\", which no ipsets entry defines; the entry was dropped"
+    }
+  ],
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/nodeattrs-app.json
+{
+  "Policy": "{\"tagOwners\":{\"tag:conn\":[\"alice@example.com\"],\"tag:web\":[\"alice@example.com\"]},\"acls\":[{\"action\":\"accept\",\"src\":[\"*\"],\"dst\":[\"*:*\"]}],\"nodeAttrs\":[{\"target\":[\"tag:conn\"],\"attr\":[\"https://tailground.dev/cap/nodeattr-app/0\"]},{\"target\":[\"alice@example.com\"],\"attr\":[\"mycorp.example/cap/beta\",\"https://tailground.dev/cap/nodeattr-app/1\"]}]}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": {
+    "0": {
+      "tailscale.com/app-connectors": [
+        "{\"name\":\"github\",\"domains\":[\"github.com\"]}"
+      ]
+    },
+    "1": {
+      "tailscale.com/cap/relay": [
+        "{\"allow\":true}"
+      ]
+    }
+  },
+  "ExternalShare": null
+}
+=== golden/nodeattrs.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"] },\n  \"acls\": [ { \"action\": \"accept\", \"src\": [\"*\"], \"dst\": [\"*:*\"] } ],\n  \"nodeAttrs\": [\n    { \"target\": [\"tag:web\"], \"attr\": [ \"mullvad\"] },\n    { \"target\": [\"alice@example.com\"], \"attr\": [\"mycorp.example/cap/beta\"] }\n  ]\n}",
+  "Diagnostics": [
+    {
+      "severity": "info",
+      "code": "limit",
+      "pointer": "5:39",
+      "message": "nodeAttrs[0] attr \"funnel\" (public-internet exposure) isn't simulated — the graph won't show the internet reaching these devices"
+    }
+  ],
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/posture-custom.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:client\": [\"alice@corp.example\"], \"tag:srv\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"tag:client\"], \"dst\": [\"tag:srv:443\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": {
+    "Definitions": {
+      "posture:trusted": [
+        "custom:env == 'prod'",
+        "custom:riskScore < '50'"
+      ]
+    },
+    "ACLSrcPosture": {
+      "0": [
+        "posture:trusted"
+      ]
+    },
+    "GrantSrcPosture": {},
+    "SSHSrcPosture": {},
+    "DefaultSrcPosture": null,
+    "CustomAttrs": {
+      "custom:env": "string",
+      "custom:riskScore": "number"
+    }
+  },
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/posture-default.json
+{
+  "Policy": "{\n  \"groups\": { \"group:admin\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:prod\": [\"group:admin\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"group:admin\"], \"dst\": [\"tag:prod:22\"] },\n    { \"action\": \"accept\", \"src\": [\"group:admin\"], \"dst\": [\"tag:prod:443\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": {
+    "Definitions": {
+      "posture:corp": [
+        "node:os == 'macos'",
+        "node:tsVersion >= '1.80'"
+      ],
+      "posture:linux": [
+        "node:os == 'linux'"
+      ]
+    },
+    "ACLSrcPosture": {
+      "1": [
+        "posture:linux"
+      ]
+    },
+    "GrantSrcPosture": {},
+    "SSHSrcPosture": {},
+    "DefaultSrcPosture": [
+      "posture:corp"
+    ],
+    "CustomAttrs": {}
+  },
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/posture.json
+{
+  "Policy": "{\n  \"groups\": { \"group:admin\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:prod\": [\"group:admin\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"group:admin\"], \"dst\": [\"tag:prod:22\"] },\n    { \"action\": \"accept\", \"src\": [\"group:admin\"], \"dst\": [\"tag:prod:443\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": {
+    "Definitions": {
+      "posture:corp": [
+        "node:os == 'macos'",
+        "node:tsVersion >= '1.80'"
+      ]
+    },
+    "ACLSrcPosture": {
+      "0": [
+        "posture:corp"
+      ]
+    },
+    "GrantSrcPosture": {},
+    "SSHSrcPosture": {},
+    "DefaultSrcPosture": null,
+    "CustomAttrs": {}
+  },
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/preflight-fatal.json
+{
+  "Policy": "",
+  "Diagnostics": [
+    {
+      "severity": "error",
+      "code": "limit",
+      "pointer": "3:43",
+      "message": "\"autogroup:frobnicate\" may be valid on Tailscale, but Tailground can't evaluate it — remove or replace it here to see results"
+    }
+  ],
+  "Posture": null,
+  "Fatal": true,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/preflight-strip.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:web:443\"] }\n  ]\n}",
+  "Diagnostics": [
+    {
+      "severity": "warning",
+      "code": "policy",
+      "pointer": "4:3",
+      "message": "unknown key \"somethingNew\" was ignored (Tailscale would reject the whole file)"
+    }
+  ],
+  "Posture": {
+    "Definitions": {
+      "posture:corp": [
+        "node:os == 'macos'"
+      ]
+    },
+    "ACLSrcPosture": {
+      "0": [
+        "posture:corp"
+      ]
+    },
+    "GrantSrcPosture": {},
+    "SSHSrcPosture": {},
+    "DefaultSrcPosture": null,
+    "CustomAttrs": {}
+  },
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/proto-numeric.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:a\": [\"u@e.com\"], \"tag:b\": [\"u@e.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:*\"], \"proto\": \"gre\" },\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:*\"], \"proto\": \"ipv4\" },\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:*\"], \"proto\": \"icmp\" },\n    { \"action\": \"accept\", \"src\": [\"tag:a\"], \"dst\": [\"tag:b:443\"], \"proto\": \"tcp\" }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/ssh-localpart.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"] },\n  \"ssh\": [\n    { \"action\": \"accept\", \"src\": [\"autogroup:member\"], \"dst\": [\"tag:srv\"], \"users\": [\"localpart:*@corp.example\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/ssh-recorder.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:prod\": [\"alice@example.com\"], \"tag:recorder\": [\"alice@example.com\"] },\n  \"ssh\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:prod\"], \"users\": [\"ubuntu\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/ssh.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:prod\": [\"alice@example.com\"] },\n  \"ssh\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:prod\"], \"users\": [\"ubuntu\", \"root\"] },\n    { \"action\": \"check\",  \"src\": [\"group:ops\"],         \"dst\": [\"tag:prod\"], \"users\": [\"autogroup:nonroot\"] }\n  ],\n  \"groups\": { \"group:ops\": [\"bob@example.com\"] }\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/svc-basic.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:client\": [\"alice@corp.example\"], \"tag:api\": [\"alice@corp.example\"], \"tag:other\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"tag:client\"], \"dst\": [\"100.96.0.10:443\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/tag-acls.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:ci\": [\"alice@example.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"alice@example.com\"], \"dst\": [\"tag:web:443\"] },\n    { \"action\": \"accept\", \"src\": [\"tag:ci\"], \"dst\": [\"tag:web:22\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/tests-block.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:db\": [\"alice@example.com\"] },\n  \"groups\": { \"group:eng\": [\"alice@example.com\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web:443\"] },\n    { \"action\": \"accept\", \"src\": [\"tag:web\"], \"dst\": [\"tag:db:5432\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"group:eng\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\", \"tag:web:22\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== golden/user-domain-wildcard.json
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:srv\": [\"alice@corp.example\"] },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"alice@corp.example\",\"bob@corp.example\"], \"dst\": [\"tag:srv:22\"] }\n  ]\n}",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/00-using-tailground/scenario
+{
+  "Policy": "{\n                                                                              \n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\":  [\"group:eng\"] \n  },\n  \"grants\": [\n                                                                    \n    { \"src\": [\"autogroup:member\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] },\n                                                                                       \n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:22\"] },\n                                                \n    { \"src\": [\"tag:web\"], \"dst\": [\"tag:db\"], \"ip\": [\"tcp:5432\"] } \n  ],\n  \"ssh\": [\n                                                                               \n    { \"action\": \"check\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"users\": [\"autogroup:nonroot\"] } \n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/01-tailnet-basics/scenario
+{
+  "Policy": "{\n                                                                           \n                                                     \n  \"tagOwners\": {\n    \"tag:web\": [\"alice@example.com\"],\n    \"tag:db\": [\"alice@example.com\"] \n  },\n  \"tests\": [\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\", \"tag:db:5432\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/02-first-acl/scenario
+{
+  "Policy": "{\n                                                                               \n                                                                                  \n  \"tagOwners\": {\n    \"tag:web\": [\"alice@example.com\"],\n    \"tag:db\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n                             \n  ],\n  \"tests\": [\n    {\n      \"src\": \"alice@example.com\",\n      \"accept\": [\"tag:web:443\"],\n      \"deny\": [\"tag:web:22\", \"tag:db:5432\"] \n    } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/02-first-acl/solution
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:db\": [\"alice@example.com\"] },\n  \"grants\": [\n    { \"src\": [\"alice@example.com\", \"bob@example.com\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:web:22\", \"tag:db:5432\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/03-tags/scenario
+{
+  "Policy": "{\n                                                                             \n                                                                                \n                                            \n  \"tagOwners\": {\n    \"tag:web\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n    { \"src\": [\"alice@example.com\", \"bob@example.com\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] } \n  ],\n  \"tests\": [\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/03-tags/solution
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:db\": [\"alice@example.com\"] },\n  \"grants\": [\n    { \"src\": [\"alice@example.com\", \"bob@example.com\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"tag:web\"], \"dst\": [\"tag:db\"], \"ip\": [\"tcp:5432\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/04-autogroups/scenario
+{
+  "Policy": "{\n                                                                                \n                                                               \n  \"tagOwners\": {\n    \"tag:web\": [\"alice@example.com\"],\n    \"tag:db\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:web:22\"] },\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/04-autogroups/solution
+{
+  "Policy": "{\n  \"tagOwners\": { \"tag:web\": [\"alice@example.com\"], \"tag:db\": [\"alice@example.com\"] },\n  \"grants\": [\n    { \"src\": [\"autogroup:member\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:web:22\"] },\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/05-groups/scenario
+{
+  "Policy": "{\n                                                                          \n                                                                             \n                               \n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"] },\n    { \"src\": \"alice@example.com\", \"deny\": [\"tag:web:443\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/05-groups/solution
+{
+  "Policy": "{\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n    \"group:sales\": [\"carol@example.com\"]\n  },\n  \"tagOwners\": { \"tag:web\": [\"group:eng\"], \"tag:db\": [\"group:eng\"] },\n  \"grants\": [\n    { \"src\": [\"group:sales\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"] },\n    { \"src\": \"alice@example.com\", \"deny\": [\"tag:web:443\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/06-hosts/scenario
+{
+  "Policy": "{\n                                                                             \n                                                                \n  \"hosts\": {\n  },\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"group:eng\", \"accept\": [\"database:5432\"], \"deny\": [\"database:22\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/06-hosts/solution
+{
+  "Policy": "{\n  \"hosts\": { \"database\": \"100.64.0.6/32\" },\n  \"groups\": { \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:web\": [\"group:eng\"], \"tag:db\": [\"group:eng\"] },\n  \"grants\": [\n    { \"src\": [\"group:eng\"], \"dst\": [\"database\"], \"ip\": [\"tcp:5432\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"group:eng\", \"accept\": [\"database:5432\"], \"deny\": [\"database:22\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/07-grants/scenario
+{
+  "Policy": "{\n                                                                             \n                                                                                \n                                                                             \n                    \n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"] \n  },\n  \"acls\": [\n    { \"action\": \"accept\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web:80\"] } \n  ],\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"group:eng\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:web:80\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/07-grants/solution
+{
+  "Policy": "{\n  \"groups\": { \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:web\": [\"group:eng\"], \"tag:db\": [\"group:eng\"] },\n  \"grants\": [\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"group:eng\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:web:80\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/08-app-capabilities/scenario
+{
+  "Policy": "{\n                                                                                \n                                                                            \n                                                                  \n                                                                        \n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"] \n  },\n  \"grants\": [\n    {\n      \"src\": [\"group:eng\"],\n      \"dst\": [\"tag:web\"],\n      \"ip\": [\"tcp:443\"] \n                  \n                                                                      \n    } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/09-ssh/scenario
+{
+  "Policy": "{\n                                                                              \n                                                                               \n                                                            \n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n    \"group:sales\": [\"carol@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"] \n  },\n  \"grants\": [\n    { \"src\": [\"group:eng\", \"group:sales\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:22\"] } \n  ],\n  \"ssh\": [\n           \n  ],\n  \"sshTests\": [\n    { \"src\": \"alice@example.com\", \"dst\": [\"tag:web\"], \"accept\": [\"ubuntu\"], \"deny\": [\"root\"] },\n    { \"src\": \"carol@example.com\", \"dst\": [\"tag:web\"], \"check\": [\"ubuntu\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/09-ssh/solution
+{
+  "Policy": "{\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n    \"group:sales\": [\"carol@example.com\"]\n  },\n  \"tagOwners\": { \"tag:web\": [\"group:eng\"], \"tag:db\": [\"group:eng\"] },\n  \"grants\": [\n    { \"src\": [\"group:eng\", \"group:sales\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:22\"] }\n  ],\n  \"ssh\": [\n    { \"action\": \"accept\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"users\": [\"autogroup:nonroot\"] },\n    { \"action\": \"check\", \"src\": [\"group:sales\"], \"dst\": [\"tag:web\"], \"users\": [\"autogroup:nonroot\"], \"checkPeriod\": \"12h\" }\n  ],\n  \"sshTests\": [\n    { \"src\": \"alice@example.com\", \"dst\": [\"tag:web\"], \"accept\": [\"ubuntu\"], \"deny\": [\"root\"] },\n    { \"src\": \"carol@example.com\", \"dst\": [\"tag:web\"], \"check\": [\"ubuntu\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/10-autogroup-self/scenario
+{
+  "Policy": "{\n                                                                               \n                                                                              \n                                                                                   \n                                                         \n  \"grants\": [\n                                                           \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/10-autogroup-self/solution
+{
+  "Policy": "{\n  \"grants\": [\n    { \"src\": [\"autogroup:member\"], \"dst\": [\"autogroup:self\"], \"ip\": [\"*\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/11-posture/scenario
+{
+  "Policy": "{\n  \"groups\": {\n    \"group:admin\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:prod\": [\"group:admin\"] \n  },\n  \"grants\": [\n    { \"src\": [\"group:admin\"], \"dst\": [\"tag:prod\"], \"ip\": [\"tcp:22\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/11-posture/solution
+{
+  "Policy": "{\n  \"groups\": { \"group:admin\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:prod\": [\"group:admin\"] },\n  \"grants\": [\n    { \"src\": [\"group:admin\"], \"dst\": [\"tag:prod\"], \"ip\": [\"tcp:22\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": {
+    "Definitions": {
+      "posture:corp": [
+        "node:os == 'macos'",
+        "node:tsVersion >= '1.80'"
+      ]
+    },
+    "ACLSrcPosture": {},
+    "GrantSrcPosture": {
+      "0": [
+        "posture:corp"
+      ]
+    },
+    "SSHSrcPosture": {},
+    "DefaultSrcPosture": null,
+    "CustomAttrs": {}
+  },
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/12-autoapprovers/scenario
+{
+  "Policy": "{\n                                                                               \n                                                                               \n                                                                                  \n  \"tagOwners\": {\n    \"tag:router\": [\"alice@example.com\"] \n  },\n  \"autoApprovers\": {\n    \"routes\": {\n      \"10.1.0.0/16\": [\"tag:router\"] \n    },\n    \"exitNode\": [\"tag:router\"] \n  },\n  \"grants\": [\n    { \"src\": [\"alice@example.com\"], \"dst\": [\"10.1.0.0/16\"], \"ip\": [\"*\"] },\n    { \"src\": [\"alice@example.com\"], \"dst\": [\"autogroup:internet\"], \"ip\": [\"*\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/13-putting-it-together/scenario
+{
+  "Policy": "{\n                                                           \n                                                         \n                                       \n                                                               \n                             \n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"ssh\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\", \"tag:web:22\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] } \n  ],\n  \"sshTests\": [\n    { \"src\": \"alice@example.com\", \"dst\": [\"tag:web\"], \"check\": [\"ubuntu\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/13-putting-it-together/solution
+{
+  "Policy": "{\n  \"groups\": { \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] },\n  \"tagOwners\": { \"tag:web\": [\"group:eng\"], \"tag:db\": [\"group:eng\"] },\n  \"grants\": [\n    { \"src\": [\"autogroup:member\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"tag:web\"], \"dst\": [\"tag:db\"], \"ip\": [\"tcp:5432\"] }\n  ],\n  \"ssh\": [\n    { \"action\": \"check\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"users\": [\"autogroup:nonroot\"], \"checkPeriod\": \"12h\" }\n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\", \"tag:web:22\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] }\n  ],\n  \"sshTests\": [\n    { \"src\": \"alice@example.com\", \"dst\": [\"tag:web\"], \"check\": [\"ubuntu\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/14-domain-roles/scenario
+{
+  "Policy": "{\n                                                       \n                                                                        \n                                                                              \n                    \n                                                        \n                                                 \n  \"tagOwners\": {\n    \"tag:wiki\": [\"alice@corp.example\"],\n    \"tag:infra\": [\"alice@corp.example\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"bob@corp.example\",     \"accept\": [\"tag:wiki:443\"], \"deny\": [\"tag:infra:22\"] },\n    { \"src\": \"carol@contractor.dev\", \"deny\":   [\"tag:wiki:443\", \"tag:infra:22\"] },\n    { \"src\": \"alice@corp.example\",   \"accept\": [\"tag:wiki:443\", \"tag:infra:22\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/14-domain-roles/solution
+{
+  "Policy": "{\n  \"tagOwners\": {\n    \"tag:wiki\": [\"alice@corp.example\"],\n    \"tag:infra\": [\"alice@corp.example\"]\n  },\n  \"grants\": [\n    { \"src\": [\"alice@corp.example\",\"bob@corp.example\"], \"dst\": [\"tag:wiki\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"alice@corp.example\"], \"dst\": [\"tag:infra\"], \"ip\": [\"tcp:22\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"bob@corp.example\",     \"accept\": [\"tag:wiki:443\"], \"deny\": [\"tag:infra:22\"] },\n    { \"src\": \"carol@contractor.dev\", \"deny\":   [\"tag:wiki:443\", \"tag:infra:22\"] },\n    { \"src\": \"alice@corp.example\",   \"accept\": [\"tag:wiki:443\", \"tag:infra:22\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/15-ipsets/scenario
+{
+  "Policy": "{\n  \"tagOwners\": {\n    \"tag:ci\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"tag:ci\", \"accept\": [\"100.64.0.20:443\", \"100.64.0.21:443\"], \"deny\": [\"100.64.0.20:22\", \"100.64.0.99:443\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/15-ipsets/solution
+{
+  "Policy": "{\n  \"tagOwners\": {\n    \"tag:ci\": [\"alice@example.com\"]\n  },\n  \"grants\": [\n    { \"src\": [\"tag:ci\"], \"dst\": [\"100.64.0.20/32\",\"100.64.0.21/32\"], \"ip\": [\"tcp:443\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"tag:ci\", \"accept\": [\"100.64.0.20:443\", \"100.64.0.21:443\"], \"deny\": [\"100.64.0.20:22\", \"100.64.0.99:443\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/16-services/scenario
+{
+  "Policy": "{\n                                                                             \n                                                                                 \n                                              \n    \n                                                         \n  \"tagOwners\": {\n    \"tag:client\": [\"alice@example.com\"],\n    \"tag:api\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n           \n  ],\n  \"tests\": [\n    { \"src\": \"tag:client\", \"accept\": [\"100.96.0.10:443\"], \"deny\": [\"100.96.0.10:22\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/16-services/solution
+{
+  "Policy": "{\n  \"tagOwners\": {\n    \"tag:client\": [\"alice@example.com\"],\n    \"tag:api\": [\"alice@example.com\"]\n  },\n  \"grants\": [\n    { \"src\": [\"tag:client\"], \"dst\": [\"100.96.0.10\"], \"ip\": [\"tcp:443\"] }\n  ],\n  \"tests\": [\n    { \"src\": \"tag:client\", \"accept\": [\"100.96.0.10:443\"], \"deny\": [\"100.96.0.10:22\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/17-via/scenario
+{
+  "Policy": "{\n                                                                               \n                                                                            \n                                                                                 \n                                          \n    \n                                                                    \n                                                           \n                                                                            \n                                                    \n                                                           \n  \"tagOwners\": {\n    \"tag:app\": [\"alice@example.com\"],\n    \"tag:relay\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n    { \"src\": [\"tag:app\"], \"dst\": [\"10.99.0.0/24\"], \"ip\": [\"tcp:80\"], \"via\": [\"tag:relay\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/17-via/solution
+{
+  "Policy": "{\n  \"tagOwners\": {\n    \"tag:app\": [\"alice@example.com\"],\n    \"tag:relay\": [\"alice@example.com\"]\n  },\n  \"grants\": [\n    { \"src\": [\"tag:app\"], \"dst\": [\"10.99.0.0/24\"], \"ip\": [\"tcp:80\"], \"via\": [\"tag:relay\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/18-custom-posture/scenario
+{
+  "Policy": "{\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"] \n  },\n  \"tagOwners\": {\n    \"tag:secrets\": [\"group:eng\"] \n  },\n  \"grants\": [\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:secrets\"], \"ip\": [\"tcp:443\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/18-custom-posture/solution
+{
+  "Policy": "{\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"]\n  },\n  \"tagOwners\": {\n    \"tag:secrets\": [\"group:eng\"]\n  },\n  \"grants\": [\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:secrets\"], \"ip\": [\"tcp:443\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": {
+    "Definitions": {
+      "posture:trusted": [
+        "custom:env == 'prod'",
+        "custom:riskScore < '50'"
+      ]
+    },
+    "ACLSrcPosture": {},
+    "GrantSrcPosture": {
+      "0": [
+        "posture:trusted"
+      ]
+    },
+    "SSHSrcPosture": {},
+    "DefaultSrcPosture": null,
+    "CustomAttrs": {
+      "custom:env": "string",
+      "custom:riskScore": "number"
+    }
+  },
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": null
+}
+=== lesson/19-node-sharing/scenario
+{
+  "Policy": "{\n                                                                            \n                                                                            \n                                                                           \n    \n                                                                 \n                                                                          \n                                                                          \n                                             \n                                                                            \n                                                                    \n                                                                 \n  \"tagOwners\": {\n    \"tag:srv\": [\"alice@example.com\"],\n    \"tag:client\": [\"alice@example.com\"] \n  },\n  \"grants\": [\n    { \"src\": [\"100.127.0.1\",\"fd7a:115c:a1e0:ffff::1\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"100.127.0.2\",\"fd7a:115c:a1e0:ffff::2\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:22\"] } \n  ] \n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": {
+    "Tailnets": [
+      {
+        "Alias": "partner",
+        "ExternalID": "acme-42",
+        "AllowIncomingConnections": true,
+        "AllowExternalReferencesTo": [
+          "tag:client"
+        ],
+        "Configured": true,
+        "ExposedUsers": null,
+        "Nodes": [
+          {
+            "Name": "eng-laptop",
+            "Tags": null,
+            "Groups": [
+              "group:eng"
+            ],
+            "IPv4": "100.127.0.1",
+            "IPv6": "fd7a:115c:a1e0:ffff::1"
+          },
+          {
+            "Name": "relay",
+            "Tags": [
+              "tag:relay"
+            ],
+            "Groups": null,
+            "IPv4": "100.127.0.2",
+            "IPv6": "fd7a:115c:a1e0:ffff::2"
+          },
+          {
+            "Name": "sales-laptop",
+            "Tags": null,
+            "Groups": [
+              "group:sales"
+            ],
+            "IPv4": "100.127.0.3",
+            "IPv6": "fd7a:115c:a1e0:ffff::3"
+          }
+        ]
+      }
+    ]
+  }
+}
+=== lesson/19-node-sharing/solution
+{
+  "Policy": "{\n  \"tagOwners\": {\n    \"tag:srv\": [\"alice@example.com\"],\n    \"tag:client\": [\"alice@example.com\"]\n  },\n  \"grants\": [\n    { \"src\": [\"100.127.0.1\",\"fd7a:115c:a1e0:ffff::1\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"100.127.0.2\",\"fd7a:115c:a1e0:ffff::2\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:22\"] }\n  ]\n}\n",
+  "Diagnostics": null,
+  "Posture": null,
+  "Fatal": false,
+  "AppNodeCaps": null,
+  "ExternalShare": {
+    "Tailnets": [
+      {
+        "Alias": "partner",
+        "ExternalID": "acme-42",
+        "AllowIncomingConnections": true,
+        "AllowExternalReferencesTo": [
+          "tag:client"
+        ],
+        "Configured": true,
+        "ExposedUsers": null,
+        "Nodes": [
+          {
+            "Name": "eng-laptop",
+            "Tags": null,
+            "Groups": [
+              "group:eng"
+            ],
+            "IPv4": "100.127.0.1",
+            "IPv6": "fd7a:115c:a1e0:ffff::1"
+          },
+          {
+            "Name": "relay",
+            "Tags": [
+              "tag:relay"
+            ],
+            "Groups": null,
+            "IPv4": "100.127.0.2",
+            "IPv6": "fd7a:115c:a1e0:ffff::2"
+          },
+          {
+            "Name": "sales-laptop",
+            "Tags": null,
+            "Groups": [
+              "group:sales"
+            ],
+            "IPv4": "100.127.0.3",
+            "IPv6": "fd7a:115c:a1e0:ffff::3"
+          }
+        ]
+      }
+    ]
+  }
+}
