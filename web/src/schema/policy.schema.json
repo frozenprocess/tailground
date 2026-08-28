@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tailground.dev/policy.schema.json",
+  "title": "Tailscale policy file",
+  "description": "Hand-maintained schema for Tailscale HuJSON policy files, tracking the fields the Headscale hscontrol/policy/v2 compiler accepts plus the Tailscale syntax reference. Kept in sync by engine/schema/sync_test.go.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "groups": {
+      "type": "object",
+      "description": "Named collections of users. Group names must start with 'group:'.",
+      "propertyNames": { "pattern": "^group:" },
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "hosts": {
+      "type": "object",
+      "description": "Named IP addresses or CIDR ranges, usable anywhere an alias is accepted.",
+      "additionalProperties": { "type": "string" }
+    },
+    "tagOwners": {
+      "type": "object",
+      "description": "Which users or groups may assign each tag. Tag names must start with 'tag:'.",
+      "propertyNames": { "pattern": "^tag:" },
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "acls": {
+      "type": "array",
+      "description": "Access-control rules. Each rule allows traffic from every src to every dst.",
+      "items": { "$ref": "#/$defs/acl" }
+    },
+    "grants": {
+      "type": "array",
+      "description": "The newer, more expressive form of access rule. Carries IP/port capabilities and/or application capabilities.",
+      "items": { "$ref": "#/$defs/grant" }
+    },
+    "nodeAttrs": {
+      "type": "array",
+      "description": "Attach node capabilities to the devices selected by target.",
+      "items": { "$ref": "#/$defs/nodeAttr" }
+    },
+    "autoApprovers": {
+      "$ref": "#/$defs/autoApprovers",
+      "description": "Routes and exit nodes that are approved automatically when advertised by an owner."
+    },
+    "ssh": {
+      "type": "array",
+      "description": "Tailscale SSH rules: who may SSH into which devices, as which local users.",
+      "items": { "$ref": "#/$defs/ssh" }
+    },
+    "tests": {
+      "type": "array",
+      "description": "Self-checks run against the compiled policy: assert reachability from a source.",
+      "items": { "$ref": "#/$defs/test" }
+    },
+    "sshTests": {
+      "type": "array",
+      "description": "Self-checks for SSH rules: assert which users may SSH from a source to each dst.",
+      "items": { "$ref": "#/$defs/sshTest" }
+    },
+    "randomizeClientPort": {
+      "type": "boolean",
+      "description": "Ask clients to use a random source port instead of the default 41641."
+    },
+    "disableIPv4": {
+      "type": "boolean",
+      "description": "Stop assigning Tailscale IPv4 addresses. No effect on policy evaluation — Tailground ignores it (info note)."
+    },
+    "oneCGNATRoute": {
+      "description": "Control whether clients install one 100.64.0.0/10 route or fine-grained routes. No effect on policy evaluation — Tailground ignores it (info note)."
+    },
+    "derpMap": {
+      "type": "object",
+      "description": "Custom DERP relay servers. No effect on policy evaluation — Tailground ignores it (info note)."
+    },
+    "extraDNSRecords": {
+      "type": "array",
+      "description": "Extra DNS records served to the tailnet. No effect on policy evaluation — Tailground ignores it (info note).",
+      "items": { "type": "object" }
+    },
+    "postures": {
+      "type": "object",
+      "description": "Named device-posture definitions. Tailground evaluates these itself (its own reading of the syntax); the Headscale engine ignores them.",
+      "propertyNames": { "pattern": "^posture:" },
+      "additionalProperties": {
+        "type": "array",
+        "description": "Conditions, all of which must hold. e.g. \"node:os == 'macos'\", \"node:tsVersion >= '1.80'\", \"custom:env == 'prod'\", \"custom:riskScore < '50'\".",
+        "items": { "type": "string" }
+      }
+    },
+    "defaultSrcPosture": {
+      "type": "array",
+      "description": "Baseline posture names applied to every acls/grants/ssh rule that has no srcPosture of its own. A rule's own srcPosture replaces (does not combine with) this default. Applied by Tailground's posture layer; stripped before compile with an info note.",
+      "items": { "type": "string", "pattern": "^posture:" }
+    },
+    "attrConfig": {
+      "type": "object",
+      "description": "Declares custom device-posture attributes referenced by postures as custom:<name>. Schema per the official client (tailscale/tailscale-client-go-v2#29, tailscale/tailscale#16167); not in Tailscale's public policy reference. Tailground uses the declared type to pick string vs. numeric comparison; per-device values come from the snapshot (device posture). Stripped before compile with an info note.",
+      "propertyNames": { "pattern": "^custom:" },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["string", "bool", "number", "boolean", "integer"],
+            "description": "How the attribute's value is compared. Real values are string / bool / number; boolean and integer are tolerated aliases. Defaults to string."
+          },
+          "allowSetByNode": {
+            "type": "boolean",
+            "description": "Whether a node may set this attribute on itself via LocalAPI. Not modeled by Tailground (write control, not evaluation)."
+          },
+          "broadcastToPeers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Destinations that receive this attribute's value (e.g. [\"tag:admin\"], [\"*\"]); absent means it is not broadcast. Not modeled by Tailground (propagation, not evaluation)."
+          }
+        }
+      }
+    },
+    "postureIntegrations": {
+      "description": "External device-posture providers (Intune, Jamf, Kandji, CrowdStrike, SentinelOne, …). Not modeled — Tailground evaluates only the built-in node:os / node:tsVersion / node:tsReleaseTrack conditions, so a srcPosture condition on a custom attribute these would supply will not match (warning + stripped)."
+    },
+    "ipsets": {
+      "type": "object",
+      "description": "Named collections of CIDRs, IPs, IP ranges, host: aliases and other ipset: references. Tailground expands ipset:<name> tokens to their prefixes before compiling; the Headscale engine has no ipset support.",
+      "propertyNames": { "pattern": "^ipset:" },
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "externalTailnets": {
+      "type": "object",
+      "description": "Declarative node sharing: other tailnets whose nodes are shared into this one, keyed by a local alias used in group://<alias>/<name> and tag://<alias>/<name> tokens. Tailground resolves those tokens against the shared nodes in the snapshot before compiling; the Headscale engine has no cross-tailnet concept. The wire syntax is not in Tailscale's public policy reference — this shape is Tailground's interpretation.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["externalID"],
+        "properties": {
+          "externalID": { "type": "string", "description": "The external tailnet's identifier. Required: Tailscale rejects an entry without one (\"missing externalTailnet ID\")." },
+          "allowIncomingConnections": {
+            "type": "boolean",
+            "description": "Allow this tailnet's shared nodes to initiate connections into this tailnet, i.e. appear in a grant's src. Without it, Tailscale rejects any grant whose src references this tailnet (\"external tailnet not allowed in local policy grants\")."
+          },
+          "allowExternalReferencesTo": {
+            "type": "array",
+            "description": "Local groups/tags this tailnet's own policy may reference. Tailground validates and echoes this but gates nothing on it (the other policy isn't visible).",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "alias": {
+      "type": "string",
+      "description": "A user email, user:*@<domain> membership wildcard, group:*, tag:*, host name, CIDR, ipset:*, svc:* (destination only), group://<tailnet>/<name>, tag://<tailnet>/<name>, '*', or autogroup:* token. The admin-role autogroups (autogroup:admin / owner / auditor / it-admin / network-admin / billing-admin) and autogroup:shared are resolved by Tailground against each snapshot user's role before compilation. A svc:<name> destination is rewritten to the service VIP from the snapshot before compilation (the Headscale engine has no Tailscale Services). A group:// / tag:// reference is only valid in a grant's src (Tailscale rejects it anywhere else) and is resolved against the externalTailnets shared nodes in the snapshot before compilation."
+    },
+    "aliasList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/alias" }
+    },
+    "acl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "src", "dst"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["accept"],
+          "description": "Only 'accept' is supported; there is no explicit deny."
+        },
+        "proto": {
+          "$ref": "#/$defs/proto",
+          "description": "Restrict the rule to one protocol. Omit for TCP+UDP+ICMP."
+        },
+        "src": {
+          "$ref": "#/$defs/aliasList",
+          "description": "Sources the rule applies to."
+        },
+        "srcPosture": {
+          "type": "array",
+          "description": "Posture names (any of which the source device must satisfy). Evaluated by Tailground's posture layer.",
+          "items": { "type": "string", "pattern": "^posture:" }
+        },
+        "dst": {
+          "type": "array",
+          "description": "Destinations in host:port form (port may be a range, list, or '*').",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "grant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "dst"],
+      "properties": {
+        "src": { "$ref": "#/$defs/aliasList" },
+        "srcPosture": {
+          "type": "array",
+          "description": "Posture names (any of which the source device must satisfy). Evaluated by Tailground's posture layer.",
+          "items": { "type": "string", "pattern": "^posture:" }
+        },
+        "dst": { "$ref": "#/$defs/aliasList" },
+        "ip": {
+          "type": "array",
+          "description": "Network-layer capabilities: protocol/port specifiers like '22', 'tcp:443', '*'.",
+          "items": { "type": "string" }
+        },
+        "app": {
+          "type": "object",
+          "description": "Application capabilities: capability name -> array of JSON argument objects.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "object" }
+          }
+        },
+        "via": {
+          "type": "array",
+          "description": "Route the grant through the listed tagged gateway devices.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "nodeAttr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target"],
+      "properties": {
+        "target": { "$ref": "#/$defs/aliasList" },
+        "attr": {
+          "type": "array",
+          "description": "Capability names to attach, e.g. 'mullvad', 'nextdns'.",
+          "items": { "type": "string" }
+        },
+        "app": {
+          "type": "object",
+          "description": "Application-layer node capabilities (e.g. tailscale.com/app-connectors). Tailground surfaces these on the target devices' capabilities; app-connector routing itself is not simulated.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "object" }
+          }
+        },
+        "ipPool": {
+          "type": "array",
+          "description": "Preferred IP pool(s) for the target devices (parsed, not yet enforced).",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "autoApprovers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "routes": {
+          "type": "object",
+          "description": "CIDR -> list of users/groups/tags allowed to auto-approve that route.",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "exitNode": {
+          "type": "array",
+          "description": "Users/groups/tags whose advertised exit nodes are auto-approved.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "ssh": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "src", "dst", "users"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["accept", "check"],
+          "description": "'accept' connects directly; 'check' requires periodic browser re-auth."
+        },
+        "src": {
+          "$ref": "#/$defs/aliasList",
+          "description": "Users, groups, tags or autogroups allowed to connect."
+        },
+        "srcPosture": {
+          "type": "array",
+          "description": "Posture names the source must satisfy. Evaluated by Tailground's posture layer, in order, with a miss falling through to the next ssh rule.",
+          "items": { "type": "string", "pattern": "^posture:" }
+        },
+        "dst": {
+          "$ref": "#/$defs/aliasList",
+          "description": "Destination devices (tags, autogroup:self, or user for user-owned devices)."
+        },
+        "users": {
+          "type": "array",
+          "description": "Local login names allowed, 'localpart:*@<domain>' (log in as the local-part of your own email), 'autogroup:nonroot', or '*'.",
+          "items": { "type": "string" }
+        },
+        "checkPeriod": {
+          "type": "string",
+          "description": "How long a 'check' auth lasts, e.g. '12h', or 'always' to check every time."
+        },
+        "acceptEnv": {
+          "type": "array",
+          "description": "Environment variable names (glob patterns allowed) the client may forward.",
+          "items": { "type": "string" }
+        },
+        "recorder": {
+          "type": "array",
+          "description": "Session-recorder nodes (Tailscale SSH session recording, an Enterprise feature). Tailground does not model session recording — this key is stripped with an info note and the rule still evaluates for reachability.",
+          "items": { "type": "string" }
+        },
+        "enforceRecorder": {
+          "type": "boolean",
+          "description": "Reject the SSH session if no recorder is reachable. Stripped by Tailground (session recording is not modeled)."
+        }
+      }
+    },
+    "test": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src"],
+      "properties": {
+        "src": {
+          "type": "string",
+          "description": "A single source alias."
+        },
+        "proto": {
+          "$ref": "#/$defs/proto",
+          "description": "Restrict the assertion to one protocol."
+        },
+        "accept": {
+          "type": "array",
+          "description": "host:port destinations that must be reachable from src.",
+          "items": { "type": "string" }
+        },
+        "deny": {
+          "type": "array",
+          "description": "host:port destinations that must NOT be reachable from src.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "sshTest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "dst"],
+      "properties": {
+        "src": {
+          "type": "string",
+          "description": "A single source alias."
+        },
+        "dst": {
+          "type": "array",
+          "description": "Destinations the assertion exercises (tag, host, or SSH autogroup).",
+          "items": { "type": "string" }
+        },
+        "accept": {
+          "type": "array",
+          "description": "Login names that must reach every dst via an accept- or check-action rule.",
+          "items": { "type": "string" }
+        },
+        "deny": {
+          "type": "array",
+          "description": "Login names that must NOT reach any dst.",
+          "items": { "type": "string" }
+        },
+        "check": {
+          "type": "array",
+          "description": "Login names that must reach every dst via a check-action rule specifically.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "proto": {
+      "type": "string",
+      "description": "Protocol name or IANA number.",
+      "examples": ["tcp", "udp", "icmp", "igmp", "ipv4", "ip-in-ip", "egp", "igp", "gre", "esp", "ah", "sctp", "ipv6-icmp", "fc", "*"]
+    }
+  }
+}
