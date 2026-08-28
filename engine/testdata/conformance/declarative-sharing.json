@@ -1,0 +1,4939 @@
+[
+  {
+    "case": 1,
+    "title": "External tag in acls src, incoming = false",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "acls": [
+        {
+          "action": "accept",
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app:*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 2,
+    "title": "External tag in acls src, incoming = true",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "acls": [
+        {
+          "action": "accept",
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app:*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 3,
+    "title": "External tag as a grant dst",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "dst \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app"
+          ],
+          "dst": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 4,
+    "title": "Grant src external, incoming = false",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 5,
+    "title": "Grant src external, allowIncomingConnections omitted",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 6,
+    "title": "Grant src external, no externalTailnets entry",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not found: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 7,
+    "title": "Grant src names an unknown tailnet",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not found: \"nope\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://nope/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 8,
+    "title": "Baseline: grant src tag://sandbox-b/tsnet-app",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 9,
+    "title": "Typo: tag://sandbox-b/tag:tsnet-app",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tag:tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 10,
+    "title": "Typo: tag:/sandbox-b/tsnet-app (single slash)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src=tag not found: \"tag:/sandbox-b/tsnet-app\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:/sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 11,
+    "title": "Typo: tag://Sandbox-B/tsnet-app (case)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://Sandbox-B/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 12,
+    "title": "Typo: tag://sandbox-b/tsnet-app/ (trailing slash)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app/"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 13,
+    "title": "src group://sandbox-b/ops",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "group://sandbox-b/ops"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 14,
+    "title": "src autogroup://sandbox-b/member",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"autogroup://sandbox-b/member\": host name must not contain colon (\":\") for \"autogroup://sandbox-b/member\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "autogroup://sandbox-b/member"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 15,
+    "title": "src tag://sandbox-b/ (wildcard)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/*"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 16,
+    "title": "dst ",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 17,
+    "title": "dst user group group:ops",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "group:ops"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 18,
+    "title": "dst autogroup:member",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "autogroup:member"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 19,
+    "title": "dst IP range",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "10.0.0.0/8"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 20,
+    "title": "app capability instead of ip",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "app": {
+            "example.com/cap/x": [
+              {}
+            ]
+          }
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 21,
+    "title": "With via",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "10.0.0.0/8"
+          ],
+          "ip": [
+            "*"
+          ],
+          "via": [
+            "tag:tsnet-app"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 22,
+    "title": "Mixed src: local + external",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app",
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 23,
+    "title": "External tag in an ssh rule src",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "[ssh] tag not found: \"tag://sandbox-b/tsnet-app\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [],
+      "ssh": [
+        {
+          "action": "accept",
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "users": [
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 24,
+    "title": "External tag in tests src",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "test(s) failed",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "src": "tag://sandbox-b/tsnet-app",
+          "accept": [
+            "tag:tsnet-app:443"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 25,
+    "title": "sandbox-a side",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 26,
+    "title": "sandbox-b side",
+    "tailnet": "sandbox-b",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-a": {
+          "externalID": "sandbox-a-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-a/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 27,
+    "title": "Incoming = false, grant uses only a local tag",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 28,
+    "title": "Case 27 + grant src tag://sandbox-b/tsnet-app (the user's step)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 29,
+    "title": "Key order: grants before externalTailnets, incoming = false",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 30,
+    "title": "Key order: grants before externalTailnets, incoming = true",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 31,
+    "title": "Incoming = false, src group://sandbox-b/ops",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "group://sandbox-b/ops"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 32,
+    "title": "Incoming = false, src tag://sandbox-b/",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/*"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 33,
+    "title": "Incoming = false, dst ",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 34,
+    "title": "Incoming = false, dst autogroup:internet",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "autogroup:internet"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 35,
+    "title": "Incoming = false, app capability",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "app": {
+            "example.com/cap/x": [
+              {}
+            ]
+          }
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 36,
+    "title": "Incoming = false, with via",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "10.0.0.0/8"
+          ],
+          "ip": [
+            "*"
+          ],
+          "via": [
+            "tag:tsnet-app"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 37,
+    "title": "Incoming = false, mixed local + external src",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag:tsnet-app",
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 38,
+    "title": "Incoming = false, src tag sandbox-b never allowed (tag://sandbox-b/network)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/network"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 39,
+    "title": "Incoming = false, same external src in a grant and an acls rule",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "acls": [
+        {
+          "action": "accept",
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app:*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 40,
+    "title": "Incoming = false, shaped like the user's tailnet 1 (their groups, two allowed refs, grant src tag://\u2026/network)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not allowed in local policy grants: \"sandbox-b\"",
+    "policy": {
+      "groups": {
+        "group:fullaccess": [
+          "ops@example.com"
+        ]
+      },
+      "tagOwners": {
+        "tag:config-mgmt": [
+          "autogroup:admin"
+        ],
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "group:fullaccess",
+            "tag:config-mgmt"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-b/network"
+          ],
+          "dst": [
+            "tag:config-mgmt"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 41,
+    "title": "scheme user://sandbox-b/x@example.com",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "user://sandbox-b/x@example.com"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 42,
+    "title": "scheme host://sandbox-b/foo",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src=\"host://sandbox-b/foo\": invalid address",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "host://sandbox-b/foo"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 43,
+    "title": "scheme ipset://sandbox-b/foo",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"ipset://sandbox-b/foo\": invalid IPSet name \"ipset://sandbox-b/foo\"; IP set names must start with \"ipset:\" followed by a letter or number, then letters, numbers, and non-repeating hyphen (-) or underscore (_) or periods (.)",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "ipset://sandbox-b/foo"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 44,
+    "title": "scheme svc://sandbox-b/foo",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"svc://sandbox-b/foo\": \"//sandbox-b/foo\" is not a valid DNS label: must start with a letter or number",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "svc://sandbox-b/foo"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 45,
+    "title": "scheme TAG:// uppercase",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "TAG://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 46,
+    "title": "tag://sandbox-b (no tag name)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 47,
+    "title": "tag://sandbox-b/ (empty tag name)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b/\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 48,
+    "title": "tag://sandbox-b/tsnet-app:443 (port)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app:443"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 49,
+    "title": "tag:// with spaces around",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            " tag://sandbox-b/tsnet-app "
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 50,
+    "title": "tag://sandbox-b/tsnet-app in grant via",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "via \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app"
+          ],
+          "dst": [
+            "10.0.0.0/8"
+          ],
+          "ip": [
+            "*"
+          ],
+          "via": [
+            "tag://sandbox-b/tsnet-app"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 51,
+    "title": "external ref inside a local group",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ext": [
+          "tag://sandbox-b/tsnet-app"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "group:ext"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 52,
+    "title": "group:// ref inside a local group",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ext": [
+          "group://sandbox-b/ops"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "group:ext"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 53,
+    "title": "external ref inside ipsets",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "IPSet(\"ipset:ext\") step 1 of 1: unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "ipset:ext"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ipsets": {
+        "ipset:ext": [
+          "tag://sandbox-b/tsnet-app"
+        ]
+      },
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 54,
+    "title": "external ref as a hosts alias",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "netip.ParsePrefix(\"tag://sandbox-b/tsnet-app\"): ParseAddr(\"tag://sandbox-b\"): each colon-separated field must have at least one digit (at \"tag://sandbox-b\")",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "ext"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "hosts": {
+        "ext": "tag://sandbox-b/tsnet-app"
+      },
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 55,
+    "title": "external ref in tagOwners",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "tagOwners[\"tag:tsnet-app\"]: \"tag://sandbox-b/tsnet-app\": does not exist",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "tag://sandbox-b/tsnet-app"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 56,
+    "title": "external ref in autoApprovers",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "autoApprovers.routes[\"10.0.0.0/8\"]: \"tag://sandbox-b/tsnet-app\": does not exist",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "autoApprovers": {
+        "routes": {
+          "10.0.0.0/8": [
+            "tag://sandbox-b/tsnet-app"
+          ]
+        }
+      },
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 57,
+    "title": "external ref in nodeAttrs target",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": " \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "nodeAttrs": [
+        {
+          "target": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "attr": [
+            "funnel"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 58,
+    "title": "external ref in app grant dst",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "dst \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app"
+          ],
+          "dst": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "app": {
+            "example.com/cap/x": [
+              {}
+            ]
+          }
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 59,
+    "title": "src external, dst external (both)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "dst \"tag://sandbox-b/tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 60,
+    "title": "src external + srcPosture (valid posture)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ],
+          "srcPosture": [
+            "posture:x"
+          ]
+        }
+      ],
+      "postures": {
+        "posture:x": [
+          "node:os == 'linux'"
+        ]
+      },
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 61,
+    "title": "externalID = sandbox-b DNS name",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b.example.ts.net",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 62,
+    "title": "externalID = own tailnet (sandbox-a)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-a-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 63,
+    "title": "externalID = garbage",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "ttskdjakdkaj",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 64,
+    "title": "externalID missing",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "missing externalTailnet ID",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 65,
+    "title": "key with dot: tailnet2.ts.net",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "tailnet2.ts.net": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://tailnet2.ts.net/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 66,
+    "title": "key with underscore: sandbox_b",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox_b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox_b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 67,
+    "title": "key uppercase Sandbox-B, ref lowercase",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "Sandbox-B": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 68,
+    "title": "key = DNS name of sandbox-b",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b.example.ts.net": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b.example.ts.net/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 69,
+    "title": "key is a number: 2",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "2": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://2/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 70,
+    "title": "key = tailnet2 (user's name), ref tailnet2",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "tailnet2": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "group:ops",
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://tailnet2/network"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 71,
+    "title": "allowExternalReferencesTo empty list",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": []
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 72,
+    "title": "allowExternalReferencesTo refers unknown tag",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "groups": {
+        "group:ops": [
+          "ops@example.com"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:nope"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 73,
+    "title": "division slash U+2215 before tag",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b\u2215tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b\u2215tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 74,
+    "title": "fullwidth slash U+FF0F before tag",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b\uff0ftsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b\uff0ftsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 75,
+    "title": "backslash before tag",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b\\\\tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b\\tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 76,
+    "title": "zero-width space before tag",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/\u200btsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 77,
+    "title": "zero-width space after tailnet name",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not found: \"sandbox-b\\u200b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b\u200b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 78,
+    "title": "non-breaking hyphen in tailnet name",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "external tailnet not found: \"sandbox\u2011b\"",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox\u2011b/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 79,
+    "title": "trailing newline inside string",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b/tsnet-app\n"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 80,
+    "title": "tag://sandbox-b?x (query, no path)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b?tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b?tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 81,
+    "title": "tag://sandbox-b#x (fragment)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b#tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b#tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 82,
+    "title": "tag:///tsnet-app (no tailnet)",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag:///tsnet-app\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:///tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 83,
+    "title": "tag://sandbox-b//tsnet-app (double)",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": true,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b//tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 84,
+    "title": "tag://sandbox-b (no tag), incoming=false",
+    "tailnet": "sandbox-a",
+    "status": 400,
+    "message": "src \"tag://sandbox-b\": unsupported target",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag://sandbox-b"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    },
+    "sameWording": true
+  },
+  {
+    "case": 85,
+    "title": "sandbox-a shares its tag, incoming = false",
+    "tailnet": "sandbox-a",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-b": {
+          "externalID": "sandbox-b-tailnet-id",
+          "allowIncomingConnections": false,
+          "allowExternalReferencesTo": [
+            "tag:tsnet-app"
+          ]
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "tag:tsnet-app"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "case": 86,
+    "title": "sandbox-b lets sandbox-a's tag in, incoming = true",
+    "tailnet": "sandbox-b",
+    "status": 200,
+    "message": "",
+    "policy": {
+      "tagOwners": {
+        "tag:tsnet-app": [
+          "autogroup:admin"
+        ]
+      },
+      "externalTailnets": {
+        "sandbox-a": {
+          "externalID": "sandbox-a-tailnet-id",
+          "allowIncomingConnections": true
+        }
+      },
+      "grants": [
+        {
+          "src": [
+            "*"
+          ],
+          "dst": [
+            "*"
+          ],
+          "ip": [
+            "*"
+          ]
+        },
+        {
+          "src": [
+            "tag://sandbox-a/tsnet-app"
+          ],
+          "dst": [
+            "tag:tsnet-app"
+          ],
+          "ip": [
+            "*"
+          ]
+        }
+      ],
+      "ssh": [
+        {
+          "action": "check",
+          "src": [
+            "autogroup:member"
+          ],
+          "dst": [
+            "autogroup:self"
+          ],
+          "users": [
+            "autogroup:nonroot",
+            "root"
+          ]
+        }
+      ]
+    }
+  }
+]
