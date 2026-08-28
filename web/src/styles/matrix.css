@@ -1,0 +1,252 @@
+/* ---- matrix ---- */
+.matrix-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.seg button {
+  border: none;
+  background: var(--surface);
+  color: var(--text-muted);
+  padding: 4px 9px;
+  font-size: 12px;
+}
+.seg button + button {
+  border-left: 1px solid var(--border-strong);
+}
+.seg button.active {
+  background: var(--primary);
+  color: #fff;
+}
+/* `.seg` clips its children, so the focus ring is an inset outline rather than
+   the `.btn` box-shadow glow — same intent, kept visible. */
+.seg button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.matrix-scroll {
+  overflow: auto;
+  padding: 12px 14px;
+}
+table.matrix {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+table.matrix th,
+table.matrix td {
+  border: 1px solid var(--border);
+  padding: 4px 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+table.matrix thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 2;
+}
+table.matrix th.rowhead {
+  position: sticky;
+  left: 0;
+  background: var(--surface);
+  text-align: left;
+  z-index: 1;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+table.matrix th.corner {
+  left: 0;
+  z-index: 3;
+}
+table.matrix th.group {
+  background: var(--color-linen);
+  text-align: left;
+  color: var(--text-subtle);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+td.cell {
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+td.cell.allow {
+  background: var(--color-allow-bg);
+  color: var(--color-allow);
+}
+td.cell.deny {
+  background: var(--color-deny-bg);
+  color: var(--text-subtle);
+}
+td.cell.self {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    var(--border) 4px,
+    var(--border) 5px
+  );
+}
+td.cell.sel {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+td.cell .ssh-dot {
+  font-size: 9px;
+  vertical-align: super;
+}
+
+/* SSH matrix mode */
+td.cell.ssh-cell.v-accept {
+  background: var(--color-allow-bg);
+  color: var(--color-allow);
+}
+td.cell.ssh-cell.v-check {
+  background: var(--color-check-bg);
+  color: var(--color-check);
+}
+td.cell.ssh-cell.v-reject {
+  background: var(--color-deny-bg);
+  color: var(--danger);
+}
+td.cell.ssh-cell.v-deny,
+td.cell.ssh-cell.v-none {
+  background: var(--color-deny-bg);
+  color: var(--text-subtle);
+}
+.matrix-legend-ssh {
+  font-size: 11px;
+  color: var(--text-subtle);
+  margin: 8px 0 0;
+}
+.matrix-legend-ssh .v-accept {
+  color: var(--color-allow);
+}
+.matrix-legend-ssh .v-check {
+  color: var(--color-check);
+}
+.matrix-legend-ssh .v-reject {
+  color: var(--danger);
+}
+.ssh-user-add {
+  width: 84px;
+  font-size: 11px;
+  padding: 3px 6px;
+}
+
+.device-inspector .kind-chip {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-subtle);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding: 1px 7px;
+  margin-left: 8px;
+}
+.inspector-empty {
+  color: var(--text-subtle);
+  font-size: 12px;
+  margin: 4px 0;
+}
+.filter-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.filter-rule {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--color-linen);
+}
+.fr-line {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.fr-label {
+  color: var(--text-subtle);
+  display: inline-block;
+  width: 42px;
+}
+
+.actor-label {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.actor-label .sub {
+  color: var(--text-subtle);
+  font-size: 10px;
+}
+
+/* ---- pair detail ---- */
+.pair-detail {
+  border-top: 1px solid var(--border);
+  padding: 12px 14px;
+  background: var(--surface);
+  flex: 0 0 auto;
+  max-height: 42%;
+  overflow: auto;
+}
+.pair-detail h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pair-detail .close {
+  border: none;
+  background: transparent;
+  color: var(--text-subtle);
+  margin-left: auto;
+}
+.pair-detail dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 3px 12px;
+  margin: 0;
+  font-size: 12px;
+}
+.pair-detail dt {
+  color: var(--text-subtle);
+}
+.pair-detail dd {
+  margin: 0;
+  font-family: var(--font-mono);
+}
+.verdict-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.verdict-chip {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+.verdict-chip.allow {
+  color: var(--color-allow);
+  border-color: var(--color-allow);
+}
+.verdict-chip.deny {
+  color: var(--text-subtle);
+}
