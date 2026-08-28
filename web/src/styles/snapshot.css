@@ -1,0 +1,99 @@
+/* ---- snapshot panel (accordions — src/snapshot/SnapshotPanel.tsx, L-F) ---- */
+.snap {
+  padding: 0;
+}
+/* Preset pills pinned above the accordions. */
+.snap-presets {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--surface-bar);
+  border-bottom: 1px solid var(--border);
+}
+.snap-presets .eyebrow {
+  margin-right: 2px;
+}
+.snap > .pane {
+  flex: 0 0 auto;
+  overflow: visible;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+}
+.snap > .pane:last-child {
+  border-bottom: none;
+}
+.snap > .pane .pane-content {
+  flex: 0 0 auto;
+}
+.snap-sec {
+  padding: 8px 14px 12px;
+}
+.snap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.snap th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-subtle);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.snap td {
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.snap td input {
+  width: 100%;
+  padding: 3px 5px;
+  font-size: 12px;
+}
+.snap .row-del {
+  border: none;
+  background: transparent;
+  color: var(--text-subtle);
+  padding: 2px 6px;
+}
+.snap .row-del:hover {
+  color: var(--danger);
+}
+.snap .add-row {
+  margin-top: 6px;
+  font-size: 12px;
+  border: 1px dashed var(--border-strong);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+}
+.snap .add-row:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.pill {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.snap-json-error {
+  color: var(--danger);
+  font-size: 12px;
+  padding: 4px 0;
+}
+.tags-cell {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
