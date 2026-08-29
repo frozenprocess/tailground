@@ -1,0 +1,278 @@
+name: e2e
+
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # 07:00 UTC nightly
+  workflow_dispatch:
+    inputs:
+      fuzz_seed:
+        description: "base fuzz seed (blank ⇒ derive from the run id)"
+        default: ""
+      fuzz_n:
+        description: "generated policies per shard"
+        default: "8"
+      corpus:
+        description: "also run the curated corpus (docker backend)"
+        type: boolean
+        default: true
+
+# Serialize: a run never starts while another holds a set of child tailnets,
+# so orphan accumulation is bounded and the 10-tailnet cap is never approached.
+concurrency:
+  group: e2e
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read # gh run download — restore the previous run's creds for the reaper
+
+env:
+  HEADSCALE_REF: 63123196cc21eeb301eec60bf05d5fe0a2bc4787
+
+jobs:
+  corpus:
+    if: ${{ github.event_name == 'schedule' || inputs.corpus }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { path: tailground }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: juanfont/headscale
+          ref: ${{ env.HEADSCALE_REF }}
+          path: headscale
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.27"
+          cache-dependency-path: tailground/go.sum
+
+      - name: vendor (+ headscale trim stub)
+        working-directory: tailground
+        run: make vendor
+
+      - name: restore child-tailnet creds from the last run
+        working-directory: tailground
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p e2e/.run
+          prev=$(gh run list --workflow=e2e.yml --status=completed \
+            --limit=1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+          if [ -n "$prev" ]; then
+            gh run download "$prev" --pattern 'e2e-creds-*' --dir e2e/.run || true
+            find e2e/.run -name '*.json' -exec mv -f {} e2e/.run/ \; 2>/dev/null || true
+          fi
+          ls -la e2e/.run || true
+
+      - name: reap owned tailnets
+        continue-on-error: true
+        working-directory: tailground
+        env:
+          TS_OAUTH_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_OAUTH_CLIENT_SECRET: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          E2E_TAILNET_MAX_AGE: 1h
+        run: make e2e-down
+
+      - name: offline checks (engine cases + fuzz generator + shrink)
+        working-directory: tailground
+        run: make e2e-engine
+
+      # tsnet, not docker: hosted runners have no /dev/net/tun, and the docker
+      # backend needs kernel TUN. tsnet covers L4 + posture (the SSH cases skip);
+      # run `make e2e` locally for the docker/SSH path.
+      - name: curated corpus vs a real tailnet (tsnet backend)
+        working-directory: tailground
+        env:
+          TS_OAUTH_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_OAUTH_CLIENT_SECRET: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          E2E_BACKEND: tsnet
+          E2E_REPORT: ${{ github.workspace }}/tailground/e2e-report.txt
+          E2E_ARTIFACTS: ${{ github.workspace }}/tailground/e2e-artifacts
+        run: go test -tags e2e -count=1 -v -timeout 45m -run 'TestE2E$' ./e2e/...
+
+      - name: save creds for the next run's reaper
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: e2e-creds-corpus
+          path: tailground/e2e/.run/*.json
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: upload report + failure artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: e2e-corpus-report
+          path: |
+            tailground/e2e-report.txt
+            tailground/e2e-artifacts/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  # The SSH differential. tsnet can't run it (its ListenSSH primitive doesn't
+  # enforce the SSH policy), and the docker backend's L4 path needs kernel TUN
+  # which hosted runners lack. docker-userspace splits the difference: an
+  # unprivileged tailscale/tailscale container (TS_USERSPACE=true, no
+  # /dev/net/tun) — `tailscale ssh` tunnels through the local API so the real
+  # policy-enforcing SSH server still runs. L4 cases are skipped here; the
+  # E2E_CASE glob keeps this to the SSH cases (20/22/23/24/31 run live,
+  # 21 self-skips: `check` needs a user-scoped src, unreachable on API tailnets).
+  ssh:
+    if: ${{ github.event_name == 'schedule' || inputs.corpus }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { path: tailground }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: juanfont/headscale
+          ref: ${{ env.HEADSCALE_REF }}
+          path: headscale
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.27"
+          cache-dependency-path: tailground/go.sum
+
+      - name: vendor (+ headscale trim stub)
+        working-directory: tailground
+        run: make vendor
+
+      - name: restore child-tailnet creds from the last run
+        working-directory: tailground
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p e2e/.run
+          prev=$(gh run list --workflow=e2e.yml --status=completed \
+            --limit=1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+          if [ -n "$prev" ]; then
+            gh run download "$prev" --pattern 'e2e-creds-ssh' --dir e2e/.run || true
+            find e2e/.run -name '*.json' -exec mv -f {} e2e/.run/ \; 2>/dev/null || true
+          fi
+          ls -la e2e/.run || true
+
+      - name: reap owned tailnets
+        continue-on-error: true
+        working-directory: tailground
+        env:
+          TS_OAUTH_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_OAUTH_CLIENT_SECRET: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          E2E_TAILNET_MAX_AGE: 1h
+        run: make e2e-down
+
+      - name: ssh differential vs a real tailnet (docker-userspace backend)
+        working-directory: tailground
+        env:
+          TS_OAUTH_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_OAUTH_CLIENT_SECRET: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          E2E_BACKEND: docker-userspace
+          E2E_CASE: "*ssh*"
+          E2E_REPORT: ${{ github.workspace }}/tailground/e2e-ssh-report.txt
+          E2E_ARTIFACTS: ${{ github.workspace }}/tailground/e2e-ssh-artifacts
+        run: go test -tags e2e -count=1 -v -timeout 35m -run 'TestE2E$' ./e2e/...
+
+      - name: save creds for the next run's reaper
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: e2e-creds-ssh
+          path: tailground/e2e/.run/*.json
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: upload report + failure artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: e2e-ssh-report
+          path: |
+            tailground/e2e-ssh-report.txt
+            tailground/e2e-ssh-artifacts/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  fuzz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { path: tailground }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: juanfont/headscale
+          ref: ${{ env.HEADSCALE_REF }}
+          path: headscale
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.27"
+          cache-dependency-path: tailground/go.sum
+
+      - name: vendor (+ headscale trim stub)
+        working-directory: tailground
+        run: make vendor
+
+      - name: restore creds from the last run
+        working-directory: tailground
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p e2e/.run
+          prev=$(gh run list --workflow=e2e.yml --status=completed \
+            --limit=1 --json databaseId --jq '.[0].databaseId' 2>/dev/null || true)
+          if [ -n "$prev" ]; then
+            gh run download "$prev" --pattern "e2e-creds-fuzz-${{ matrix.shard }}" --dir e2e/.run || true
+            find e2e/.run -name '*.json' -exec mv -f {} e2e/.run/ \; 2>/dev/null || true
+          fi
+
+      - name: reap this shard's tailnets
+        continue-on-error: true
+        working-directory: tailground
+        env:
+          TS_OAUTH_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_OAUTH_CLIENT_SECRET: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          E2E_TAILNET_MAX_AGE: 1h
+        run: make e2e-down
+
+      - name: fuzz sweep (shard ${{ matrix.shard }})
+        working-directory: tailground
+        env:
+          TS_OAUTH_CLIENT_ID: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          TS_OAUTH_CLIENT_SECRET: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          E2E_FUZZ_LIVE: "1"
+          E2E_BACKEND: tsnet
+          E2E_SHARDS: "1"
+          E2E_FUZZ_N: ${{ inputs.fuzz_n || '8' }}
+          E2E_ARTIFACTS: ${{ github.workspace }}/tailground/fuzz-artifacts
+        run: |
+          base="${{ inputs.fuzz_seed }}"
+          [ -z "$base" ] && base="${{ github.run_id }}"
+          stride="${E2E_FUZZ_N}"
+          export E2E_FUZZ_SEED=$(( base + ${{ matrix.shard }} * stride ))
+          echo "shard ${{ matrix.shard }}: seeds $E2E_FUZZ_SEED .. $(( E2E_FUZZ_SEED + stride - 1 ))"
+          go test -tags e2e -count=1 -v -timeout 40m -run 'TestE2EFuzz$' ./e2e/...
+
+      - name: save creds for the next run's reaper
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: e2e-creds-fuzz-${{ matrix.shard }}
+          path: tailground/e2e/.run/*.json
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: upload divergence bundle
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: fuzz-divergence-shard-${{ matrix.shard }}
+          path: tailground/fuzz-artifacts/
+          retention-days: 30
+          if-no-files-found: ignore
