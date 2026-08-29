@@ -1,0 +1,331 @@
+/* ---- tutorials ---- */
+.lesson-head {
+  gap: 6px;
+}
+.lesson-head select {
+  flex: 1;
+  min-width: 0;
+}
+.lesson-head .btn {
+  padding: 5px 9px;
+}
+
+.lesson-index {
+  padding: 20px 22px;
+}
+.lesson-intro {
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+.lesson-index ol {
+  list-style: none;
+  padding: 0;
+  counter-reset: lesson;
+}
+.lesson-index li {
+  counter-increment: lesson;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.lesson-index li::before {
+  content: counter(lesson) ".";
+  color: var(--text-subtle);
+  font-variant-numeric: tabular-nums;
+  margin-right: 8px;
+}
+.lesson-link {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 14px;
+  padding: 0;
+}
+.lesson-link:hover {
+  text-decoration: underline;
+}
+.lesson-summary {
+  display: block;
+  color: var(--text-subtle);
+  font-size: 12px;
+  margin: 2px 0 0 20px;
+}
+
+.lesson-body {
+  padding: 16px 20px 20px;
+}
+.lesson-track {
+  color: var(--accent);
+}
+.lesson-title {
+  font-size: 28px;
+  line-height: 1.18;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  margin: 4px 0 14px;
+}
+
+.lesson-md {
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--text);
+}
+.lesson-md h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 18px 0 6px;
+}
+.lesson-md p {
+  margin: 8px 0;
+}
+.lesson-md ul,
+.lesson-md ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+.lesson-md li {
+  margin: 3px 0;
+}
+.lesson-md code {
+  background: var(--color-linen);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.lesson-md pre {
+  background: var(--color-linen);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  overflow-x: auto;
+  font-size: 12px;
+}
+.lesson-md pre code {
+  background: none;
+  padding: 0;
+}
+.lesson-md table {
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 10px 0;
+}
+.lesson-md th,
+.lesson-md td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: left;
+}
+.lesson-md th {
+  background: var(--color-linen);
+}
+
+.callout {
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin: 12px 0;
+  border-left: 3px solid var(--border-strong);
+  background: var(--color-linen);
+}
+.callout-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-subtle);
+  margin-bottom: 3px;
+}
+.callout p {
+  margin: 0;
+}
+.callout-why {
+  border-left-color: var(--color-network-blue);
+}
+.callout-mistake {
+  border-left-color: var(--danger);
+  background: var(--color-deny-bg);
+}
+.callout-tip {
+  border-left-color: var(--color-allow);
+  background: var(--color-allow-bg);
+}
+.callout-note {
+  border-left-color: var(--color-check);
+  background: var(--color-check-bg);
+}
+
+.reset-scenario {
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+.lesson-footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex: 0 0 auto;
+  max-height: 46%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.grading {
+  padding: 10px 14px;
+  overflow: auto;
+  font-size: 12px;
+}
+.grading.empty-grading,
+.empty-grading {
+  color: var(--text-subtle);
+}
+.grading-head {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.grading-score {
+  color: var(--text-muted);
+}
+.grading.done .grading-score {
+  color: var(--color-allow);
+}
+.grading-group + .grading-group {
+  margin-top: 8px;
+}
+.grading ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.grading li {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 2px 6px;
+  padding: 3px 0;
+}
+.grading li .mark {
+  font-weight: 700;
+}
+.grading li.ok .mark {
+  color: var(--color-allow);
+}
+.grading li.fail .mark {
+  color: var(--danger);
+}
+.grading .case-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.grading .expect {
+  color: var(--text-subtle);
+}
+.grading .case-detail {
+  grid-column: 2;
+  color: var(--danger);
+  font-size: 11px;
+}
+.grading .raw-failure {
+  color: var(--danger);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  margin-top: 4px;
+  white-space: pre-wrap;
+}
+
+.lesson-nav {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+.lesson-nav .btn {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lesson-nav .btn:last-child {
+  text-align: right;
+}
+th.rowhead.clickable {
+  cursor: pointer;
+}
+th.rowhead.clickable:hover {
+  color: var(--accent);
+}
+
+.about-modal {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+.about-modal .pane-body {
+  padding: 0;
+  overflow: visible;
+}
+.about-modal-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 1;
+}
+
+.lesson-fig {
+  display: block;
+  margin: 12px 0 16px;
+}
+.lesson-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+.lesson-figcap {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Lesson "Show me" steps */
+.lesson-md .show-me {
+  margin: 2px 0 10px;
+}
+.tour-pulse {
+  position: relative;
+  z-index: 5;
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+  animation: tour-pulse 1.1s ease-in-out 2;
+}
+@keyframes tour-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 35%, transparent); }
+}
+.tour-note {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 24px);
+  padding: 8px 10px 8px 14px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  font-size: 13px;
+}
+.tour-note span,
+.tour-note .btn {
+  white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .tour-note { bottom: 76px; }
+  .tour-note span { display: none; }
+}
