@@ -1,0 +1,332 @@
+/* ---- graph ---- */
+.matrix-toolbar .toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  user-select: none;
+}
+.matrix-toolbar .toggle input {
+  accent-color: var(--accent);
+}
+
+/* Graph interaction hint — left side of the second toolbar row */
+.graph-hint {
+  font-size: 12px;
+  color: var(--text-subtle);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* P2-6 — graph group-highlight picker */
+.graph-group-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.graph-group-select {
+  font-size: 12px;
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  max-width: 160px;
+}
+.graph-group-count {
+  font-size: 11px;
+  color: var(--color-purple);
+  white-space: nowrap;
+}
+
+.graph-canvas {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+}
+.graph-canvas .react-flow {
+  background: var(--bg);
+}
+/* While a node / pair is focused the edge set is rebuilt under the cursor; let
+   pointer events fall through to the nodes so a fresh edge can't strobe the
+   hover. Edge tooltips/clicks are only needed in the resting view anyway. */
+.graph-canvas.node-focus .react-flow__edge {
+  pointer-events: none;
+}
+.graph-canvas .react-flow__controls {
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.graph-canvas .react-flow__controls button {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.graph-canvas .react-flow__controls button:hover {
+  background: var(--color-linen);
+}
+.gedge-label {
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.4;
+  padding: 1px 5px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  pointer-events: all;
+  white-space: nowrap;
+}
+
+.gnode {
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+}
+.gnode.device {
+  width: 158px;
+  min-height: 46px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-sm);
+  transition: opacity var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+/* Focused node's reach — floats under the card so the fixed layout size holds. */
+.gnode.device {
+  position: relative;
+}
+.gnode-reach {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  transform: translateX(-50%);
+  padding: 1px 7px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.gnode.device.tagged {
+  background: var(--color-linen);
+}
+.gnode.device.focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-bright) 32%, transparent);
+}
+/* P2-6: owner resolves into the highlighted `group:` */
+.gnode.device.in-group {
+  border-color: var(--color-purple);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-purple) 26%, transparent);
+}
+.gnode.device.in-group.focused {
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent-bright) 32%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--color-purple) 24%, transparent);
+}
+.gnode.device.dimmed,
+.gnode.internet.dimmed,
+.gnode.target.dimmed {
+  opacity: 0.25;
+}
+.gnode.target {
+  width: 152px;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-allow);
+  border-radius: var(--radius-sm);
+  background: var(--color-allow-bg);
+  box-shadow: var(--shadow-sm);
+  transition: opacity var(--transition);
+}
+.gnode.target .gnode-label {
+  color: var(--color-allow);
+}
+.gnode-glyph {
+  font-family: var(--font-mono);
+  opacity: 0.75;
+}
+.gnode-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gnode-sub {
+  font-size: 10px;
+  color: var(--text-subtle);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* P2-5 — the ELK cluster container is invisible; the hull region draws it. */
+.gnode.group {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.graph-hull-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: visible;
+}
+.graph-hull {
+  fill: color-mix(in srgb, var(--color-linen) 55%, transparent);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+.graph-hull-label {
+  fill: var(--text-subtle);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+/* P2-3 — an external tailnet's frame */
+.gnode.extframe {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed var(--color-purple);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-purple) 6%, transparent);
+}
+.gnode-extframe-label {
+  position: absolute;
+  top: 5px;
+  left: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-purple);
+}
+/* P2-4 — the local tailnet frame (drawn in a ViewportPortal, behind the graph) */
+.graph-tailnet-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
+  z-index: -1;
+}
+.graph-tailnet-frame-label {
+  position: absolute;
+  top: -8px;
+  left: 14px;
+  padding: 0 6px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  background: var(--surface);
+}
+.gnode.internet {
+  width: 120px;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-signal-red);
+  border-radius: var(--radius-pill);
+  background: var(--color-deny-bg);
+}
+.gnode.internet .gnode-label {
+  color: var(--color-signal-red);
+  font-weight: 600;
+}
+.react-flow__handle {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Ingress / egress ports — shown only where a drawn arrow ends (left, hollow:
+   accepts connections) or starts (right, filled: initiates them). Half-filled =
+   a two-way edge ends here. Edges attach at the box's outer edge, so the
+   arrowhead touches it. */
+.react-flow__handle.gport.on,
+.legend-port.gport.on {
+  --port: var(--text-muted);
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  min-width: 0;
+  min-height: 0;
+  border: 1.5px solid var(--port);
+  border-radius: 2px;
+  background: var(--color-paper);
+  transition: opacity var(--transition);
+}
+.react-flow__handle.gport.on.out,
+.legend-port.gport.on.out {
+  background: var(--port);
+}
+.react-flow__handle.gport.on.both,
+.legend-port.gport.on.both {
+  background: linear-gradient(135deg, var(--color-paper) 50%, var(--port) 50%);
+}
+.react-flow__handle.gport.on.focused {
+  --port: var(--accent);
+}
+.react-flow__handle.gport.on.faded {
+  opacity: 0.35;
+}
+
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 11px;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.legend-port {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left: 4px;
+}
+.legend-sep {
+  width: 1px;
+  height: 14px;
+  background: var(--border-strong);
+}
+
+td.cell.focusrow,
+th.rowhead.focused {
+  background: var(--color-check-bg);
+}
+td.cell.posture {
+  background: var(--color-check-bg);
+  color: var(--color-check);
+}
