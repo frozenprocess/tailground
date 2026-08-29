@@ -1,0 +1,66 @@
+/* ---- about panel ---- */
+.about {
+  padding: 24px 28px;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.about h1 {
+  font-size: 32px;
+  line-height: 1.18;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+}
+.about h3 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-charcoal);
+  margin-bottom: 6px;
+}
+.about .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+.about ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.about li {
+  margin: 3px 0;
+}
+.about .provenance {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.about .quote {
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.empty {
+  padding: 24px;
+  color: var(--text-subtle);
+  font-size: 13px;
+}
+
+/* Explanatory paragraph inside a card (under the heading or after the list). */
+.about .card-note {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.about .card-note.flush {
+  margin: 0;
+}
+.about .card-note.subtle {
+  color: var(--text-subtle);
+  font-size: 12px;
+}

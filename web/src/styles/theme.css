@@ -1,0 +1,382 @@
+:root {
+  /* ---- Neutral ramp (warm grey — the dominant palette) ---------------- */
+  --color-ink: #181717;        /* body text on light, dark surfaces */
+  --color-neutral-950: #1f1e1e;
+  --color-slate: #232222;      /* neutral-900 — solid primary buttons / active */
+  --color-graphite: #2e2d2d;   /* neutral-800 — strong text & dividers, dark headers */
+  --color-charcoal: #585757;   /* neutral-700 — muted / secondary text */
+  --color-ash: #706e6d;        /* neutral-600 — tertiary text, captions, placeholder */
+  --color-stone: #afacab;      /* neutral-500 — disabled text */
+  --color-mist: #dad6d5;       /* neutral-400 — strong borders, disabled fill */
+  --color-bone: #eeebea;       /* neutral-300 — hairline borders, hover fill */
+  --color-linen: #f7f5f4;      /* neutral-200 — nav bar, raised strips */
+  --color-canvas: #f9f7f6;     /* neutral-100 — default page background */
+  --color-cloud: #faf9f8;      /* neutral-50 */
+  --color-paper: #ffffff;      /* cards, inputs, elevated panels */
+
+  /* ---- Blue — interactive accent: links, focus, selection, node graph -- */
+  --color-blue-50: #f0f5ff;
+  --color-blue-100: #cedefd;
+  --color-blue-200: #adc7fc;   /* focus glow */
+  --color-blue-400: #6c94ec;
+  --color-blue-500: #5a82de;   /* accent chips, node graph, gradients */
+  --color-blue-700: #3f5db3;   /* link text, focus border */
+  --color-blue-900: #253570;
+  --color-network-blue: #3f5db3;   /* kept name — product-UI blue */
+
+  /* ---- Status hues -------------------------------------------------- */
+  --color-signal-red: #d04841;      /* red-500 — errors, deny, destructive */
+  --color-signal-red-hover: #b7332e;
+  --color-allow: #0e6245;           /* green-600 — allow / success / connected */
+  --color-allow-bg: #eef8ef;        /* ~green-50, warmed */
+  --color-deny-bg: #fdeeee;         /* ~red-50 */
+  --color-check: #bb5504;           /* orange-500 — posture / warning / "check" */
+  --color-check-bg: #fbf1e3;        /* ~orange-100 */
+  --color-purple: #995fc3;          /* purple-500 — SSH edge accent */
+
+  /* ---- Graph flow palette (mirrors peacha's action colours) ----------- */
+  --flow-allow: #137333;           /* green   — an allowed flow */
+  --flow-deny: #c5221f;            /* red     — an explicitly denied flow */
+  --flow-egress: #1a73e8;          /* blue    — a flow leaving the tailnet */
+  --flow-struct: #5f6368;          /* grey    — structural / "served by" edges */
+
+  /* ---- Semantic roles -------------------------------------------------- */
+  --bg: var(--color-canvas);
+  --surface: var(--color-paper);
+  /* Panel surface ladder — body sits above (lighter/plainer) its bar & toolbars. */
+  --surface-panel: var(--color-paper);
+  --surface-bar: var(--color-linen);
+  --surface-sunken: var(--color-canvas);
+  --text: var(--color-graphite);
+  --text-muted: var(--color-charcoal);
+  --text-subtle: var(--color-ash);
+  --border: var(--color-bone);
+  --border-strong: var(--color-mist);
+
+  --primary: var(--color-slate);          /* near-black — solid buttons, active tab/seg */
+  --primary-hover: var(--color-graphite);
+  --accent: var(--color-blue-700);         /* links, focus, selection, toggles */
+  --accent-hover: var(--color-blue-900);
+  --accent-bright: var(--color-blue-500);   /* accent fills, glyphs */
+  --focus-ring: var(--color-blue-200);      /* blue-200 #adc7fc — the focus glow */
+  --danger: var(--color-signal-red);
+  --danger-hover: var(--color-signal-red-hover);
+
+  /* Keyboard-focus ring — tailscale.com uses a flat 2px #ADC7FC glow on every
+     interactive element and never a browser outline. */
+  --shadow-focus: 0 0 0 2px var(--focus-ring);
+
+  /* ---- Type --------------------------------------------------------- */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-display: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", SFMono-Regular, ui-monospace, "JetBrains Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  /* Headlines: medium weight (500), tight tracking, ~1.18 line-height.
+     Tailscale uses no bold and no light display type — everything is 500. */
+  --text-display: 500 3.5rem/1.1 var(--font-display);
+  --text-h1: 500 2.5rem/1.18 var(--font-display);
+  --text-h2: 500 1.75rem/1.18 var(--font-sans);
+  --text-h3: 500 1.25rem/1.2 var(--font-sans);
+  --text-subheading: 400 1.125rem/1.5 var(--font-sans);
+  --text-body: 400 1rem/1.5 var(--font-sans);
+  --text-body-sm: 500 0.875rem/1.5 var(--font-sans);
+  --text-caption: 500 0.75rem/1.45 var(--font-sans);
+  --tracking-tight: -0.03em;    /* headings */
+  --tracking-snug: -0.01em;     /* body / UI */
+  --tracking-eyebrow: 0.05em;
+
+  /* Spacing — 4px base. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-21: 84px;
+  --space-32: 128px;
+
+  /* Radius — buttons/inputs/chips 8px, panels 12px, feature cards 16px. */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  --container: 1120px;
+  --section-gap: 88px;
+  --control-h: 32px;           /* dense-UI control height (tailscale.com uses 36px) */
+
+  /* Elevation — soft, warm-tinted, low opacity, matching tailscale.com's
+     shadow-2 / shadow-4 / shadow-8 (ink @ 3 / 8 / 12%; all stay flat). */
+  --shadow-sm: 0 4px 8px 0 rgba(24, 23, 23, 0.03);
+  --shadow-md: 0 4px 8px 0 rgba(24, 23, 23, 0.08);
+  --shadow-lg: 0 4px 12px 0 rgba(24, 23, 23, 0.12);
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);   /* --default-transition-timing-function */
+  --transition-fast: 150ms var(--ease);   /* --default-transition-duration */
+  --transition: 200ms var(--ease);         /* interactive elements */
+
+  color-scheme: light;
+}
+
+/* ---- Dark palette --------------------------------------------------------
+   Two entry points, one body (kept in sync via the shared custom-property
+   list below):
+     - the OS asks for dark and the user has not forced light  → @media rule
+     - the user explicitly picks dark in the theme toggle       → [data-theme]
+   A concrete data-theme ("light" | "dark") is written to <html> by the inline
+   script in index.html before first paint, and thereafter by useTheme(). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-canvas: #1b1a19;
+    --color-paper: #232120;
+    --color-cloud: #1f1d1c;
+    --color-linen: #201e1d;
+    --color-bone: #322f2e;
+    --color-mist: #423e3d;
+    --color-stone: #6f6b69;
+    --color-graphite: #ece9e8;
+    --color-charcoal: #b9b4b2;
+    --color-ash: #8b8785;
+
+    /* Interactive hues brighten so they hold contrast on the dark canvas. */
+    --primary: var(--color-blue-700);
+    --primary-hover: var(--color-blue-500);
+    --accent: #7ea2ee;
+    --accent-hover: #a9c3f7;
+    --accent-bright: #7ea2ee;
+    --focus-ring: #3f5db3;
+
+    --color-signal-red: #e46c63;
+    --color-signal-red-hover: #f68f87;
+    --color-network-blue: #7ea2ee;
+    --color-purple: #be8fe1;
+    --color-allow: #33c27f;
+    --color-allow-bg: #133026;
+    --color-deny-bg: #3a2422;
+    --color-check: #e5993e;
+    --color-check-bg: #3a2f1c;
+
+    /* Flow palette lifted for contrast on the dark canvas. */
+    --flow-allow: #35b06a;
+    --flow-deny: #e5645f;
+    --flow-egress: #5b9bf0;
+    --flow-struct: #9a9691;
+
+    --shadow-sm: 0 4px 8px 0 rgba(0, 0, 0, 0.24);
+    --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.36);
+    --shadow-lg: 0 10px 28px 0 rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-canvas: #1b1a19;
+  --color-paper: #232120;
+  --color-cloud: #1f1d1c;
+  --color-linen: #201e1d;
+  --color-bone: #322f2e;
+  --color-mist: #423e3d;
+  --color-stone: #6f6b69;
+  --color-graphite: #ece9e8;
+  --color-charcoal: #b9b4b2;
+  --color-ash: #8b8785;
+
+  /* Interactive hues brighten so they hold contrast on the dark canvas. */
+  --primary: var(--color-blue-700);
+  --primary-hover: var(--color-blue-500);
+  --accent: #7ea2ee;
+  --accent-hover: #a9c3f7;
+  --accent-bright: #7ea2ee;
+  --focus-ring: #3f5db3;
+
+  --color-signal-red: #e46c63;
+  --color-signal-red-hover: #f68f87;
+  --color-network-blue: #7ea2ee;
+  --color-purple: #be8fe1;
+  --color-allow: #33c27f;
+  --color-allow-bg: #133026;
+  --color-deny-bg: #3a2422;
+  --color-check: #e5993e;
+  --color-check-bg: #3a2f1c;
+
+  /* Flow palette lifted for contrast on the dark canvas. */
+  --flow-allow: #35b06a;
+  --flow-deny: #e5645f;
+  --flow-egress: #5b9bf0;
+  --flow-struct: #9a9691;
+
+  --shadow-sm: 0 4px 8px 0 rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.36);
+  --shadow-lg: 0 10px 28px 0 rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-snug);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv05", "ss01";
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.18;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+code,
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-charcoal);
+}
+
+button {
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), border-color var(--transition),
+    box-shadow var(--transition), opacity var(--transition);
+}
+.btn:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+/* Every button variant (they all carry `.btn`) gets the same flat blue glow on
+   keyboard focus — never a browser outline. */
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Primary — near-black solid, the way tailscale.com renders its main CTA.
+   Blue is deliberately NOT used here; it belongs to links and focus. */
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: var(--shadow-md);
+  opacity: 1;
+}
+
+/* Ghost / tertiary — the second action beside a primary button. Reads like a
+   link: blue, no border, underline on hover, often a trailing arrow. */
+.btn-ghost {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--accent);
+  box-shadow: none;
+}
+.btn-ghost:hover {
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Destructive action. */
+.btn-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.btn-danger:hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
+  box-shadow: var(--shadow-md);
+}
+
+select,
+input[type="text"],
+input[type="number"] {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+}
+select:focus,
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Respect reduced-motion. Kills the React Flow animated-edge dashes and every
+   token-driven transition. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .react-flow__edge-path {
+    animation: none !important;
+  }
+}
