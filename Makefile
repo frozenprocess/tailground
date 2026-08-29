@@ -5,7 +5,7 @@ TRIM_STUB  := engine/vendor-trim/config.go.stub
 TRIM_DEST  := vendor/github.com/juanfont/headscale/hscontrol/types/config.go
 CAP_PATCH  := engine/vendor-trim/capabilities.patch
 
-.PHONY: help vendor test build wasm wasm-exec size spike web-install web-dev web-build clean
+.PHONY: help vendor test build wasm wasm-exec size spike web-install web-dev web-build e2e e2e-offline e2e-engine e2e-down clean
 
 help:
 	@echo "Tailground:"
@@ -18,6 +18,10 @@ help:
 	@echo "  make web-install - npm install for the SPA"
 	@echo "  make web-dev     - build the engine, then run the Vite dev server"
 	@echo "  make web-build   - build the engine + the static SPA into web/dist"
+	@echo "  make e2e         - differential harness: every case vs a real disposable tailnet (needs creds + Docker)"
+	@echo "  make e2e-offline - PR-safe offline harness allowlist (never selects live tests)"
+	@echo "  make e2e-engine  - offline: score every case against its authored expect (no creds/Docker)"
+	@echo "  make e2e-down    - delete every child tailnet the harness owns"
 
 vendor:
 	$(GO) mod vendor
@@ -57,6 +61,29 @@ web-dev: wasm
 web-build: wasm
 	cd web && npm run build
 	@echo "static site in web/dist"
+
+# `go test` runs each package's binary with its CWD set to the package dir
+# (e2e/), so a relative E2E_ARTIFACTS / E2E_REPORT would resolve against e2e/,
+# not the repo root the examples above assume. Anchor them to absolute paths.
+e2e_paths = $(if $(E2E_ARTIFACTS),E2E_ARTIFACTS='$(abspath $(E2E_ARTIFACTS))') $(if $(E2E_REPORT),E2E_REPORT='$(abspath $(E2E_REPORT))')
+
+e2e:
+	@set -a; [ -f .env ] && . ./.env; [ -f e2e/.run/creds.env ] && . e2e/.run/creds.env; set +a; \
+	 $(e2e_paths) $(GO) test -tags e2e -count=1 -v -timeout 60m -run 'TestE2E$$|TestEngineCases|TestE2EFuzz|TestFuzzDeterministic|TestShrinkCandidates' ./e2e/...
+
+# PR-safe allowlist: never selects live tests, even with credentials in the environment.
+e2e-offline:
+	$(GO) test -tags e2e -count=1 -run '^(TestEngineCases|TestFuzzPoliciesValid|TestFuzzDeterministic|TestShrinkCandidates|TestAwaitConverged|TestClassifyRows)$$' ./e2e/...
+
+e2e-engine:
+	$(e2e_paths) $(GO) test -tags e2e -count=1 -v -run 'TestEngineCases|TestE2EFuzz|TestFuzzDeterministic|TestShrinkCandidates' ./e2e/...
+
+## e2e-down — delete every child tailnet the harness owns (via its persisted
+## creds in e2e/.run/) and report any tg-e2e- tailnet it can't reach. Set
+## E2E_TAILNET_MAX_AGE to spare recent ones.
+e2e-down:
+	@set -a; [ -f .env ] && . ./.env; [ -f e2e/.run/creds.env ] && . e2e/.run/creds.env; set +a; \
+	 E2E_REAP=1 $(GO) test -tags e2e -count=1 -v -run TestReap ./e2e/...
 
 clean:
 	rm -rf bin $(WASM_OUT) $(WASM_EXEC) web/dist
