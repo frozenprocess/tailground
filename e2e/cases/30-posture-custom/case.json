@@ -1,0 +1,34 @@
+{
+  "policy": "{ \"tagOwners\": { \"tag:a\": [\"autogroup:admin\"], \"tag:b\": [\"autogroup:admin\"], \"tag:c\": [\"autogroup:admin\"] }, \"attrConfig\": { \"custom:env\": { \"type\": \"string\" } }, \"postures\": { \"posture:prod\": [\"custom:env == 'prod'\"] }, \"acls\": [ { \"action\": \"accept\", \"src\": [\"tag:a\"], \"srcPosture\": [\"posture:prod\"], \"dst\": [\"tag:b:22\"] } ] }",
+  "snapshot": {
+    "devices": [
+      {
+        "id": 1,
+        "name": "node-a",
+        "tags": ["tag:a"],
+        "ipv4": "100.64.0.1",
+        "ipv6": "fd7a:115c:a1e0::1",
+        "os": "linux",
+        "posture": { "tsVersion": "1.100.0", "custom:env": "prod" }
+      },
+      {
+        "id": 2,
+        "name": "node-b",
+        "tags": ["tag:b"],
+        "ipv4": "100.64.0.2",
+        "ipv6": "fd7a:115c:a1e0::2",
+        "os": "linux",
+        "posture": { "tsVersion": "1.100.0" }
+      },
+      {
+        "id": 3,
+        "name": "node-c",
+        "tags": ["tag:a"],
+        "ipv4": "100.64.0.3",
+        "ipv6": "fd7a:115c:a1e0::3",
+        "os": "linux",
+        "posture": { "tsVersion": "1.100.0", "custom:env": "dev" }
+      }
+    ]
+  }
+}

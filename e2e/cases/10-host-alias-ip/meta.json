@@ -1,0 +1,5 @@
+{
+  "title": "hosts alias to a single IP",
+  "minNodes": 3,
+  "note": "host-b resolves to node-b's IP; the rewriter substitutes the real address."
+}

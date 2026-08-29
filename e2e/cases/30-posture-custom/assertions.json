@@ -1,0 +1,4 @@
+[
+  { "from": "node-a", "to": "node-b", "proto": "tcp", "port": 22, "expect": "allow" },
+  { "from": "node-c", "to": "node-b", "proto": "tcp", "port": 22, "expect": "deny" }
+]

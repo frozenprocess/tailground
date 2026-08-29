@@ -1,0 +1,6 @@
+{
+  "title": "Tailscale Service (svc:) reachability",
+  "needs": ["services"],
+  "minNodes": 4,
+  "note": "svc:payments has VIP 100.96.0.20 backed by api-1/api-2; the ACL lets tag:client reach it on :443 only. Tailground rewrites svc:payments:443 to the VIP before compile and probes reachability against each backend's filter. Engine-only (TestEngineCases): Tailscale Service provisioning is plan-gated and the harness allocates no VIP."
+}

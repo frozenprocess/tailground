@@ -1,0 +1,4 @@
+{
+  "title": "autogroup:nonroot excludes root",
+  "minNodes": 2
+}

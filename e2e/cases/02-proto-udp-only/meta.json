@@ -1,0 +1,4 @@
+{
+  "title": "per-rule proto restricts to UDP",
+  "minNodes": 2
+}

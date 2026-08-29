@@ -1,0 +1,5 @@
+{
+  "title": "Tailscale SSH needs an L4 rule opening port 22",
+  "minNodes": 2,
+  "note": "grants:[] => default-deny L4, so port 22 is closed to raw TCP. An ssh accept rule alone is not enough: real Tailscale ships the SSHPolicy but an empty packet filter, so the session never reaches the SSH handler. Regression guard for the evalSSH tcp/22 gate."
+}

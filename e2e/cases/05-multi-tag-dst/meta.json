@@ -1,0 +1,5 @@
+{
+  "title": "destination device carries two tags",
+  "minNodes": 2,
+  "note": "node-b matches tag:c so the rule applies to it."
+}

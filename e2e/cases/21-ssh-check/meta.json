@@ -1,0 +1,7 @@
+{
+  "title": "ssh check action requires a browser check",
+  "minNodes": 2,
+  "needs": [
+    "ssh-check"
+  ]
+}

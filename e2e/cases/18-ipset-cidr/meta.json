@@ -1,0 +1,5 @@
+{
+  "title": "ipset expands to its member IPs",
+  "minNodes": 3,
+  "note": "ipset:pair lists node-a and node-b by IP; Tailground expands it to those prefixes before compiling (Headscale doesn't understand the ipsets section), so engine and real Tailscale should agree. node-c is outside the set and no rule targets tag:a/tag:b."
+}

@@ -1,0 +1,5 @@
+[
+  { "from": "client", "toService": "svc:payments", "proto": "tcp", "port": 443, "expect": "allow" },
+  { "from": "client", "toService": "svc:payments", "proto": "tcp", "port": 80, "expect": "deny" },
+  { "from": "outsider", "toService": "svc:payments", "proto": "tcp", "port": 443, "expect": "deny" }
+]

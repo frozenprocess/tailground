@@ -1,0 +1,4 @@
+{
+  "title": "IANA protocol number 6 behaves as tcp",
+  "minNodes": 2
+}

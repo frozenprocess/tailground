@@ -1,0 +1,23 @@
+[
+  {
+    "from": "node-a",
+    "to": "node-b",
+    "ssh": true,
+    "user": "root",
+    "expect": "accept"
+  },
+  {
+    "from": "node-c",
+    "to": "node-b",
+    "ssh": true,
+    "user": "root",
+    "expect": "deny"
+  },
+  {
+    "from": "node-a",
+    "to": "node-c",
+    "ssh": true,
+    "user": "root",
+    "expect": "deny"
+  }
+]

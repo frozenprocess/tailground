@@ -1,0 +1,14 @@
+{
+  "policy": "{ \"tagOwners\": { \"tag:client\": [\"autogroup:admin\"], \"tag:api\": [\"autogroup:admin\"], \"tag:outsider\": [\"autogroup:admin\"] }, \"acls\": [ { \"action\": \"accept\", \"src\": [\"tag:client\"], \"dst\": [\"svc:payments:443\"] } ] }",
+  "snapshot": {
+    "devices": [
+      { "id": 1, "name": "client", "tags": ["tag:client"], "ipv4": "100.64.0.1", "ipv6": "fd7a:115c:a1e0::1", "os": "linux" },
+      { "id": 2, "name": "api-1", "tags": ["tag:api"], "ipv4": "100.64.0.2", "ipv6": "fd7a:115c:a1e0::2", "os": "linux" },
+      { "id": 3, "name": "api-2", "tags": ["tag:api"], "ipv4": "100.64.0.3", "ipv6": "fd7a:115c:a1e0::3", "os": "linux" },
+      { "id": 4, "name": "outsider", "tags": ["tag:outsider"], "ipv4": "100.64.0.4", "ipv6": "fd7a:115c:a1e0::4", "os": "linux" }
+    ],
+    "services": [
+      { "name": "svc:payments", "vip": "100.96.0.20", "backends": [2, 3] }
+    ]
+  }
+}

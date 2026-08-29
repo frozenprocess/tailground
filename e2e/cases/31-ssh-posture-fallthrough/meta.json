@@ -1,0 +1,5 @@
+{
+  "title": "ssh srcPosture miss falls through to the next rule",
+  "minNodes": 2,
+  "note": "ssh[0] is gated on node:os == 'macos'; node-a runs linux so it fails the gate. ssh[1] is an ungated accept for the same src/dst/user. The engine models a gate miss as a non-match that falls through (Tailscale SaaS drops the failing source from the rule's principals at compile time), so node-a → node-b root is expected to ACCEPT via ssh[1]. This case is the live check on fall-through vs hard-deny — if a real tailnet denies here, the engine model is wrong and gatedSSHVerdict should hard-deny on a gate miss instead."
+}

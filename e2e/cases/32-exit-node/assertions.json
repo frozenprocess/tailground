@@ -1,0 +1,4 @@
+[
+  { "from": "client", "to": "exit", "toRoute": "0.0.0.0/0", "proto": "tcp", "port": 443, "expect": "allow" },
+  { "from": "outsider", "to": "exit", "toRoute": "0.0.0.0/0", "proto": "tcp", "port": 443, "expect": "deny" }
+]

@@ -1,0 +1,4 @@
+{
+  "title": "srcPosture node:os == 'macos' is not satisfied",
+  "minNodes": 2
+}

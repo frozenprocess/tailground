@@ -1,0 +1,5 @@
+{
+  "title": "hosts alias to a CIDR covering the tailnet",
+  "minNodes": 3,
+  "note": "100.64.0.0/10 is the Tailscale CGNAT range \u2014 matches every real node."
+}

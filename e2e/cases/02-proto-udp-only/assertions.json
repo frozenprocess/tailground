@@ -1,0 +1,23 @@
+[
+  {
+    "from": "node-a",
+    "to": "node-b",
+    "proto": "udp",
+    "port": 5000,
+    "expect": "allow"
+  },
+  {
+    "from": "node-a",
+    "to": "node-b",
+    "proto": "tcp",
+    "port": 5000,
+    "expect": "deny"
+  },
+  {
+    "from": "node-b",
+    "to": "node-a",
+    "proto": "udp",
+    "port": 5000,
+    "expect": "deny"
+  }
+]

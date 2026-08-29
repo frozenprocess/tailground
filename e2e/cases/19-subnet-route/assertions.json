@@ -1,0 +1,5 @@
+[
+  { "from": "client", "to": "relay", "toRoute": "10.88.0.0/24", "proto": "tcp", "port": 22, "expect": "allow" },
+  { "from": "client", "to": "relay", "toRoute": "10.88.0.0/24", "proto": "tcp", "port": 80, "expect": "deny" },
+  { "from": "outsider", "to": "relay", "toRoute": "10.88.0.0/24", "proto": "tcp", "port": 22, "expect": "deny" }
+]

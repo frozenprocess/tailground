@@ -1,0 +1,23 @@
+[
+  {
+    "from": "node-a",
+    "to": "node-b",
+    "proto": "tcp",
+    "port": 8000,
+    "expect": "allow"
+  },
+  {
+    "from": "node-a",
+    "to": "node-b",
+    "proto": "tcp",
+    "port": 8002,
+    "expect": "allow"
+  },
+  {
+    "from": "node-a",
+    "to": "node-b",
+    "proto": "tcp",
+    "port": 8003,
+    "expect": "deny"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "title": "empty acls \u2192 everything denied",
+  "minNodes": 2,
+  "note": "Headscale default-denies with no matching rule."
+}

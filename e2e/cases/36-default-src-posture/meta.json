@@ -1,0 +1,5 @@
+{
+  "title": "defaultSrcPosture gates rules with no srcPosture; an explicit srcPosture replaces it",
+  "minNodes": 2,
+  "note": "Top-level defaultSrcPosture=[posture:linux] applies to acls[0] (no srcPosture) -> node-a (linux) reaches :22. acls[1] carries its own srcPosture=[posture:mac], which replaces the default (not combines), so linux node-a is dropped from :443. The harness injects the real node:os into the snapshot."
+}

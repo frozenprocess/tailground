@@ -1,0 +1,5 @@
+{
+  "title": "ssh srcPosture node:os == 'macos' is NOT satisfied",
+  "minNodes": 2,
+  "note": "node-a runs linux, so ssh[0]'s srcPosture gate fails and no other rule matches → deny. The engine's posture layer now models srcPosture on ssh rules (per-rule ordered evaluation, gate miss = fall through), so engine and real Tailscale agree."
+}

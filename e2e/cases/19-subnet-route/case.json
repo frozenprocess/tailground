@@ -1,0 +1,10 @@
+{
+  "policy": "{ \"tagOwners\": { \"tag:client\": [\"autogroup:admin\"], \"tag:relay\": [\"autogroup:admin\"], \"tag:outsider\": [\"autogroup:admin\"] }, \"acls\": [ { \"action\": \"accept\", \"src\": [\"tag:client\"], \"dst\": [\"10.88.0.0/24:22\"] } ] }",
+  "snapshot": {
+    "devices": [
+      { "id": 1, "name": "client", "tags": ["tag:client"], "ipv4": "100.64.0.1", "ipv6": "fd7a:115c:a1e0::1", "os": "linux" },
+      { "id": 2, "name": "relay", "tags": ["tag:relay"], "ipv4": "100.64.0.2", "ipv6": "fd7a:115c:a1e0::2", "os": "linux", "routes": ["10.88.0.0/24"], "routesApproved": ["10.88.0.0/24"] },
+      { "id": 3, "name": "outsider", "tags": ["tag:outsider"], "ipv4": "100.64.0.3", "ipv6": "fd7a:115c:a1e0::3", "os": "linux" }
+    ]
+  }
+}

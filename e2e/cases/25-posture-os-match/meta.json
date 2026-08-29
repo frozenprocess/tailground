@@ -1,0 +1,5 @@
+{
+  "title": "srcPosture node:os == 'linux' is satisfied",
+  "minNodes": 2,
+  "note": "Nodes run linux; the harness injects the real node:os into the snapshot."
+}

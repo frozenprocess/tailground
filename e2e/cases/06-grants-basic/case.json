@@ -1,0 +1,27 @@
+{
+  "policy": "{ \"tagOwners\": { \"tag:a\": [\"autogroup:admin\"], \"tag:b\": [\"autogroup:admin\"], \"tag:c\": [\"autogroup:admin\"] }, \"grants\": [ { \"src\": [\"tag:a\"], \"dst\": [\"tag:b\"], \"ip\": [\"22\"] } ] }",
+  "snapshot": {
+    "devices": [
+      {
+        "id": 1,
+        "name": "node-a",
+        "tags": [
+          "tag:a"
+        ],
+        "ipv4": "100.64.0.1",
+        "ipv6": "fd7a:115c:a1e0::1",
+        "os": "linux"
+      },
+      {
+        "id": 2,
+        "name": "node-b",
+        "tags": [
+          "tag:b"
+        ],
+        "ipv4": "100.64.0.2",
+        "ipv6": "fd7a:115c:a1e0::2",
+        "os": "linux"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "title": "custom device attribute (custom:env via posture-attributes API)",
+  "minNodes": 3
+}

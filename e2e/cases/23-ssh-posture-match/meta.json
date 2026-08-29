@@ -1,0 +1,5 @@
+{
+  "title": "ssh srcPosture node:os == 'linux' is satisfied",
+  "minNodes": 2,
+  "note": "Nodes run linux, so the gate passes; engine and Tailscale should agree here."
+}

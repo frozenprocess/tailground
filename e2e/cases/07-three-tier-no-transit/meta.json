@@ -1,0 +1,4 @@
+{
+  "title": "a\u2192b and b\u2192c allowed; a\u2192c is not",
+  "minNodes": 3
+}

@@ -1,0 +1,7 @@
+{
+  "title": "exit node reachability",
+  "needs": [
+    "exit-node"
+  ],
+  "minNodes": 3
+}

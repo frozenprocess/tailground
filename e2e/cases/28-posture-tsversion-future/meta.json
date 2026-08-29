@@ -1,0 +1,4 @@
+{
+  "title": "srcPosture node:tsVersion >= '99.0.0' is not satisfied",
+  "minNodes": 2
+}

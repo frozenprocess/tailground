@@ -1,0 +1,10 @@
+{
+  "policy": "{ \"tagOwners\": { \"tag:client\": [\"autogroup:admin\"], \"tag:exit\": [\"autogroup:admin\"], \"tag:outsider\": [\"autogroup:admin\"] }, \"acls\": [ { \"action\": \"accept\", \"src\": [\"tag:client\"], \"dst\": [\"autogroup:internet:*\"] } ] }",
+  "snapshot": {
+    "devices": [
+      { "id": 1, "name": "client", "tags": ["tag:client"], "ipv4": "100.64.0.1", "ipv6": "fd7a:115c:a1e0::1", "os": "linux" },
+      { "id": 2, "name": "exit", "tags": ["tag:exit"], "ipv4": "100.64.0.2", "ipv6": "fd7a:115c:a1e0::2", "os": "linux", "routes": ["0.0.0.0/0", "::/0"], "routesApproved": ["0.0.0.0/0", "::/0"] },
+      { "id": 3, "name": "outsider", "tags": ["tag:outsider"], "ipv4": "100.64.0.3", "ipv6": "fd7a:115c:a1e0::3", "os": "linux" }
+    ]
+  }
+}

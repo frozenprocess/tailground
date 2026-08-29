@@ -1,0 +1,6 @@
+{
+  "title": "subnet route reachability",
+  "needs": ["subnet-route"],
+  "minNodes": 3,
+  "note": "relay advertises 10.88.0.0/24 and it is approved; the ACL lets tag:client reach that subnet on :22 only. Tailground evaluates the source against the relay's own compiled filter (where Headscale puts a CIDR-dst rule); real Tailscale routes the packet through the relay. Offline-verified via TestEngineCases; a live sweep binds 10.88.0.1 on the relay and probes it from the client."
+}

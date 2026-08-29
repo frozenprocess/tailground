@@ -1,0 +1,33 @@
+{
+  "policy": "{ \"tagOwners\": { \"tag:a\": [\"autogroup:admin\"], \"tag:b\": [\"autogroup:admin\"], \"tag:c\": [\"autogroup:admin\"] }, \"postures\": { \"posture:mac\": [\"node:os == 'macos'\"] }, \"acls\": [ { \"action\": \"accept\", \"src\": [\"tag:a\"], \"srcPosture\": [\"posture:mac\"], \"dst\": [\"tag:b:22\"] } ] }",
+  "snapshot": {
+    "devices": [
+      {
+        "id": 1,
+        "name": "node-a",
+        "tags": [
+          "tag:a"
+        ],
+        "ipv4": "100.64.0.1",
+        "ipv6": "fd7a:115c:a1e0::1",
+        "os": "linux",
+        "posture": {
+          "tsVersion": "1.100.0"
+        }
+      },
+      {
+        "id": 2,
+        "name": "node-b",
+        "tags": [
+          "tag:b"
+        ],
+        "ipv4": "100.64.0.2",
+        "ipv6": "fd7a:115c:a1e0::2",
+        "os": "linux",
+        "posture": {
+          "tsVersion": "1.100.0"
+        }
+      }
+    ]
+  }
+}
