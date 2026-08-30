@@ -1,0 +1,90 @@
+{
+  "policy": "{\n  // A grant can also carry an application capability: a named blob of JSON your\n  // own service reads to make its own authorization decisions. There are no\n  // automated checks here — add the \"app\" block, then click the\n  // alice-laptop → web-1 cell and look at \"App capabilities granted\".\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"],\n  },\n  \"grants\": [\n    {\n      \"src\": [\"group:eng\"],\n      \"dst\": [\"tag:web\"],\n      \"ip\": [\"tcp:443\"],\n      // TODO: add\n      //   \"app\": { \"example.com/cap/deploy\": [{ \"env\": \"staging\" }] }\n    },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      },
+      {
+        "id": 3,
+        "email": "carol@example.com"
+      }
+    ],
+    "groups": {
+      "group:eng": [
+        "alice@example.com",
+        "bob@example.com"
+      ],
+      "group:sales": [
+        "carol@example.com"
+      ]
+    },
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "carol-laptop",
+        "user": "carol@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "windows"
+      },
+      {
+        "id": 4,
+        "name": "web-1",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      },
+      {
+        "id": 5,
+        "name": "web-2",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.5",
+        "os": "linux"
+      },
+      {
+        "id": 6,
+        "name": "db-1",
+        "tags": [
+          "tag:db"
+        ],
+        "ipv4": "100.64.0.6",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "app",
+      "proto": "tcp",
+      "port": 8080
+    }
+  ]
+}

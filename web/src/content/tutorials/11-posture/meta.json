@@ -1,0 +1,5 @@
+{
+  "title": "Device posture",
+  "summary": "Gate a rule on the source device's OS and Tailscale version.",
+  "track": "Advanced"
+}

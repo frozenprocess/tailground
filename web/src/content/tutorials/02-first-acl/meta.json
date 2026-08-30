@@ -1,0 +1,5 @@
+{
+  "title": "Your first access rule",
+  "summary": "Start from default-deny and open exactly one path.",
+  "track": "Access rules"
+}

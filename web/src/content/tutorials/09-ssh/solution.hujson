@@ -1,0 +1,18 @@
+{
+  "groups": {
+    "group:eng": ["alice@example.com", "bob@example.com"],
+    "group:sales": ["carol@example.com"]
+  },
+  "tagOwners": { "tag:web": ["group:eng"], "tag:db": ["group:eng"] },
+  "grants": [
+    { "src": ["group:eng", "group:sales"], "dst": ["tag:web"], "ip": ["tcp:22"] }
+  ],
+  "ssh": [
+    { "action": "accept", "src": ["group:eng"], "dst": ["tag:web"], "users": ["autogroup:nonroot"] },
+    { "action": "check", "src": ["group:sales"], "dst": ["tag:web"], "users": ["autogroup:nonroot"], "checkPeriod": "12h" }
+  ],
+  "sshTests": [
+    { "src": "alice@example.com", "dst": ["tag:web"], "accept": ["ubuntu"], "deny": ["root"] },
+    { "src": "carol@example.com", "dst": ["tag:web"], "check": ["ubuntu"] }
+  ]
+}

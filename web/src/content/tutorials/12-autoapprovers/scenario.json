@@ -1,0 +1,61 @@
+{
+  "policy": "{\n  // A subnet route or exit node lets a device carry traffic for addresses that\n  // aren't tailnet devices. Two things must be true: the route is APPROVED (an\n  // admin approves it, or autoApprovers does), AND a grant opens the destination.\n  \"tagOwners\": {\n    \"tag:router\": [\"alice@example.com\"],\n  },\n  \"autoApprovers\": {\n    \"routes\": {\n      \"10.1.0.0/16\": [\"tag:router\"],\n    },\n    \"exitNode\": [\"tag:router\"],\n  },\n  \"grants\": [\n    { \"src\": [\"alice@example.com\"], \"dst\": [\"10.1.0.0/16\"], \"ip\": [\"*\"] },\n    { \"src\": [\"alice@example.com\"], \"dst\": [\"autogroup:internet\"], \"ip\": [\"*\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "office-router",
+        "tags": [
+          "tag:router"
+        ],
+        "ipv4": "100.64.0.2",
+        "os": "linux",
+        "routes": [
+          "10.1.0.0/16"
+        ]
+      },
+      {
+        "id": 3,
+        "name": "home-gateway",
+        "tags": [
+          "tag:router"
+        ],
+        "ipv4": "100.64.0.3",
+        "os": "linux",
+        "routes": [
+          "0.0.0.0/0",
+          "::/0"
+        ],
+        "routesApproved": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

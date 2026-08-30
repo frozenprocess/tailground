@@ -1,0 +1,90 @@
+{
+  "policy": "{\n  // autogroup:member is every user-owned device. Use it so ANY person can reach\n  // the web tier on 443 — without listing people one by one.\n  \"tagOwners\": {\n    \"tag:web\": [\"alice@example.com\"],\n    \"tag:db\": [\"alice@example.com\"],\n  },\n  \"grants\": [\n    // TODO\n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:web:22\"] },\n    { \"src\": \"alice@example.com\", \"accept\": [\"tag:web:443\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      },
+      {
+        "id": 3,
+        "email": "carol@example.com"
+      }
+    ],
+    "groups": {
+      "group:eng": [
+        "alice@example.com",
+        "bob@example.com"
+      ],
+      "group:sales": [
+        "carol@example.com"
+      ]
+    },
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "carol-laptop",
+        "user": "carol@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "windows"
+      },
+      {
+        "id": 4,
+        "name": "web-1",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      },
+      {
+        "id": 5,
+        "name": "web-2",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.5",
+        "os": "linux"
+      },
+      {
+        "id": 6,
+        "name": "db-1",
+        "tags": [
+          "tag:db"
+        ],
+        "ipv4": "100.64.0.6",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

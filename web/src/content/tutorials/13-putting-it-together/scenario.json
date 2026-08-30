@@ -1,0 +1,100 @@
+{
+  "policy": "{\n  // Build a realistic 3-tier policy from the checks alone:\n  //   - anyone (autogroup:member) reaches tag:web on 443\n  //   - tag:web reaches tag:db on 5432\n  //   - engineers get check-SSH to tag:web (autogroup:nonroot)\n  //   - nothing else is open\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"],\n  },\n  \"grants\": [\n    // TODO\n  ],\n  \"ssh\": [\n    // TODO\n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\", \"tag:web:22\"] },\n    { \"src\": \"tag:web\", \"accept\": [\"tag:db:5432\"], \"deny\": [\"tag:db:22\"] },\n  ],\n  \"sshTests\": [\n    { \"src\": \"alice@example.com\", \"dst\": [\"tag:web\"], \"check\": [\"ubuntu\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      },
+      {
+        "id": 3,
+        "email": "carol@example.com"
+      }
+    ],
+    "groups": {
+      "group:eng": [
+        "alice@example.com",
+        "bob@example.com"
+      ],
+      "group:sales": [
+        "carol@example.com"
+      ]
+    },
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "carol-laptop",
+        "user": "carol@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "windows"
+      },
+      {
+        "id": 4,
+        "name": "web-1",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      },
+      {
+        "id": 5,
+        "name": "web-2",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.5",
+        "os": "linux"
+      },
+      {
+        "id": 6,
+        "name": "db-1",
+        "tags": [
+          "tag:db"
+        ],
+        "ipv4": "100.64.0.6",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "app",
+      "proto": "tcp",
+      "port": 8080
+    },
+    {
+      "name": "postgres",
+      "proto": "tcp",
+      "port": 5432
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

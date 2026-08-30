@@ -1,0 +1,14 @@
+{
+  "groups": {
+    "group:eng": ["alice@example.com", "bob@example.com"],
+    "group:sales": ["carol@example.com"]
+  },
+  "tagOwners": { "tag:web": ["group:eng"], "tag:db": ["group:eng"] },
+  "grants": [
+    { "src": ["group:sales"], "dst": ["tag:web"], "ip": ["tcp:443"] }
+  ],
+  "tests": [
+    { "src": "carol@example.com", "accept": ["tag:web:443"] },
+    { "src": "alice@example.com", "deny": ["tag:web:443"] }
+  ]
+}

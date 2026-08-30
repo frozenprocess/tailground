@@ -1,0 +1,10 @@
+{
+  "tagOwners": { "tag:web": ["alice@example.com"], "tag:db": ["alice@example.com"] },
+  "grants": [
+    { "src": ["autogroup:member"], "dst": ["tag:web"], "ip": ["tcp:443"] }
+  ],
+  "tests": [
+    { "src": "carol@example.com", "accept": ["tag:web:443"], "deny": ["tag:web:22"] },
+    { "src": "alice@example.com", "accept": ["tag:web:443"] }
+  ]
+}

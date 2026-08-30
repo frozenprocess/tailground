@@ -1,0 +1,5 @@
+{
+  "title": "Subnet routes & exit nodes",
+  "summary": "Reach a private CIDR through a router, or the internet through an exit node.",
+  "track": "Advanced"
+}

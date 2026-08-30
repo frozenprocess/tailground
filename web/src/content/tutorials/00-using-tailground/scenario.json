@@ -1,0 +1,78 @@
+{
+  "policy": "{\n  // A small, working policy to explore. Change anything and watch the matrix.\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"tagOwners\": {\n    \"tag:web\": [\"group:eng\"],\n    \"tag:db\":  [\"group:eng\"],\n  },\n  \"grants\": [\n    // Everyone on the tailnet can reach the web servers over HTTPS.\n    { \"src\": [\"autogroup:member\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:443\"] },\n    // Engineers can reach port 22 on the web servers (SSH needs this and an ssh rule).\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"ip\": [\"tcp:22\"] },\n    // The web servers can talk to the database.\n    { \"src\": [\"tag:web\"], \"dst\": [\"tag:db\"], \"ip\": [\"tcp:5432\"] },\n  ],\n  \"ssh\": [\n    // Engineers may SSH to the web servers, after re-authenticating (\"check\").\n    { \"action\": \"check\", \"src\": [\"group:eng\"], \"dst\": [\"tag:web\"], \"users\": [\"autogroup:nonroot\"] },\n  ],\n  \"tests\": [\n    { \"src\": \"carol@example.com\", \"accept\": [\"tag:web:443\"], \"deny\": [\"tag:db:5432\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      },
+      {
+        "id": 3,
+        "email": "carol@example.com"
+      }
+    ],
+    "groups": {
+      "group:eng": [
+        "alice@example.com",
+        "bob@example.com"
+      ],
+      "group:sales": [
+        "carol@example.com"
+      ]
+    },
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "carol-laptop",
+        "user": "carol@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "windows"
+      },
+      {
+        "id": 4,
+        "name": "web-1",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      },
+      {
+        "id": 5,
+        "name": "web-2",
+        "tags": [
+          "tag:web"
+        ],
+        "ipv4": "100.64.0.5",
+        "os": "linux"
+      },
+      {
+        "id": 6,
+        "name": "db-1",
+        "tags": [
+          "tag:db"
+        ],
+        "ipv4": "100.64.0.6",
+        "os": "linux"
+      }
+    ]
+  }
+}

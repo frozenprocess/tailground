@@ -1,0 +1,57 @@
+{
+  "policy": "{\n  // autogroup:self as a dst means \"the same user's other devices\". Add the ONE\n  // grant below. There's no checklist (the policy 'tests' block can't express\n  // per-user scoping) — watch the matrix: alice-laptop ↔ alice-phone should go\n  // green, but alice → bob and bob → alice stay red.\n  \"grants\": [\n    // TODO: src autogroup:member, dst autogroup:self, ip *\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "alice-phone",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "ios"
+      },
+      {
+        "id": 3,
+        "name": "bob-laptop",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "linux"
+      },
+      {
+        "id": 4,
+        "name": "bob-phone",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.4",
+        "os": "android"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    },
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    }
+  ]
+}

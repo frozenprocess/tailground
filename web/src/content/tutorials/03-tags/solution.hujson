@@ -1,0 +1,11 @@
+{
+  "tagOwners": { "tag:web": ["alice@example.com"], "tag:db": ["alice@example.com"] },
+  "grants": [
+    { "src": ["alice@example.com", "bob@example.com"], "dst": ["tag:web"], "ip": ["tcp:443"] },
+    { "src": ["tag:web"], "dst": ["tag:db"], "ip": ["tcp:5432"] }
+  ],
+  "tests": [
+    { "src": "alice@example.com", "accept": ["tag:web:443"], "deny": ["tag:db:5432"] },
+    { "src": "tag:web", "accept": ["tag:db:5432"], "deny": ["tag:db:22"] }
+  ]
+}

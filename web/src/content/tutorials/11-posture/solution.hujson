@@ -1,0 +1,10 @@
+{
+  "postures": {
+    "posture:corp": ["node:os == 'macos'", "node:tsVersion >= '1.80'"]
+  },
+  "groups": { "group:admin": ["alice@example.com", "bob@example.com"] },
+  "tagOwners": { "tag:prod": ["group:admin"] },
+  "grants": [
+    { "src": ["group:admin"], "srcPosture": ["posture:corp"], "dst": ["tag:prod"], "ip": ["tcp:22"] }
+  ]
+}

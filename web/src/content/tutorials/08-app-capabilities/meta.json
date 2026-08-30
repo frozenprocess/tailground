@@ -1,0 +1,5 @@
+{
+  "title": "Application capabilities",
+  "summary": "Attach a JSON payload your own service reads for authorization.",
+  "track": "Access rules"
+}

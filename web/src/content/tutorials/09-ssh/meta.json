@@ -1,0 +1,5 @@
+{
+  "title": "Tailscale SSH",
+  "summary": "accept vs check, and which local users a rule allows.",
+  "track": "Access rules"
+}

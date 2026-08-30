@@ -1,0 +1,69 @@
+{
+  "policy": "{\n  // Device posture, evaluated by Tailground's own layer (its reading of the\n  // syntax, not Tailscale's code). Right now every admin device reaches prod.\n  //\n  //   1. Define \"posture:corp\" below as node:os == 'macos' AND\n  //      node:tsVersion >= '1.80'.\n  //   2. Add \"srcPosture\": [\"posture:corp\"] to the grant.\n  //\n  // The 'tests' block runs without posture, so there's no checklist — watch the\n  // matrix and the posture panel: only alice-macbook should keep SSH to prod.\n  \"postures\": {\n  },\n  \"groups\": {\n    \"group:admin\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"tagOwners\": {\n    \"tag:prod\": [\"group:admin\"],\n  },\n  \"grants\": [\n    { \"src\": [\"group:admin\"], \"dst\": [\"tag:prod\"], \"ip\": [\"tcp:22\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      }
+    ],
+    "groups": {
+      "group:admin": [
+        "alice@example.com",
+        "bob@example.com"
+      ]
+    },
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-macbook",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos",
+        "posture": {
+          "tsVersion": "1.84.0"
+        }
+      },
+      {
+        "id": 2,
+        "name": "alice-old-mac",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "macos",
+        "posture": {
+          "tsVersion": "1.70.0"
+        }
+      },
+      {
+        "id": 3,
+        "name": "bob-linux",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "linux",
+        "posture": {
+          "tsVersion": "1.84.0"
+        }
+      },
+      {
+        "id": 4,
+        "name": "prod-1",
+        "tags": [
+          "tag:prod"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}
