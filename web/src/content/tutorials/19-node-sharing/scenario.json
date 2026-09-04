@@ -1,0 +1,68 @@
+{
+  "policy": "{\n  // A partner tailnet shares some of its nodes with yours. externalTailnets\n  // configures the relationship under a local alias (\"partner\"); the shared\n  // nodes themselves come from the snapshot (see External tailnets there).\n  //\n  // Sharing is two policies, one per tailnet. This is YOUR half:\n  //   - allowIncomingConnections: true  -> you are the SHARING side. Your\n  //     grants may use group://partner/<name> / tag://partner/<name> as a\n  //     src, pointing at your own resources.\n  //   - allowExternalReferencesTo        -> you are the RECEIVING side. The\n  //     partner's policy may name these local tags/groups as a src.\n  // No checklist \u2014 watch the \"Declarative node sharing\" panel.\n  \"tagOwners\": {\n    \"tag:srv\": [\"alice@example.com\"],\n    \"tag:client\": [\"alice@example.com\"],\n  },\n  \"externalTailnets\": {\n    \"partner\": {\n      \"externalID\": \"acme-42\",\n      \"allowIncomingConnections\": true,\n      \"allowExternalReferencesTo\": [\"tag:client\"],\n    },\n  },\n  \"grants\": [\n    { \"src\": [\"group://partner/eng\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:443\"] },\n    { \"src\": [\"tag://partner/relay\"], \"dst\": [\"tag:srv\"], \"ip\": [\"tcp:22\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "srv-1",
+        "tags": [
+          "tag:srv"
+        ],
+        "ipv4": "100.64.0.1",
+        "os": "linux"
+      },
+      {
+        "id": 2,
+        "name": "client-1",
+        "tags": [
+          "tag:client"
+        ],
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      }
+    ],
+    "externalTailnets": [
+      {
+        "alias": "partner",
+        "nodes": [
+          {
+            "name": "eng-laptop",
+            "groups": [
+              "eng"
+            ]
+          },
+          {
+            "name": "relay",
+            "tags": [
+              "relay"
+            ]
+          },
+          {
+            "name": "sales-laptop",
+            "groups": [
+              "sales"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

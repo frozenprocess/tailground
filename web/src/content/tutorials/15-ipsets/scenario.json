@@ -1,0 +1,50 @@
+{
+  "policy": "{\n  // An ipset is a named list of addresses (CIDRs, single IPs, a-b ranges,\n  // host: refs, or nested ipsets). Tailground expands ipset:<name> to its\n  // members before compiling. Here the CI runners need two internal services\n  // that aren't tailnet devices — 100.64.0.20 (registry) and .21 (cache).\n  //\n  // Add a grant: tag:ci reaches ipset:build-deps on 443.\n  \"ipsets\": {\n    \"ipset:build-deps\": [\"100.64.0.20/32\", \"100.64.0.21/32\"],\n  },\n  \"tagOwners\": {\n    \"tag:ci\": [\"alice@example.com\"],\n  },\n  \"grants\": [\n    // TODO\n  ],\n  \"tests\": [\n    { \"src\": \"tag:ci\", \"accept\": [\"100.64.0.20:443\", \"100.64.0.21:443\"], \"deny\": [\"100.64.0.20:22\", \"100.64.0.99:443\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "ci-runner-1",
+        "tags": [
+          "tag:ci"
+        ],
+        "ipv4": "100.64.0.1",
+        "os": "linux"
+      },
+      {
+        "id": 2,
+        "name": "ci-runner-2",
+        "tags": [
+          "tag:ci"
+        ],
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "dev-laptop",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "macos"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

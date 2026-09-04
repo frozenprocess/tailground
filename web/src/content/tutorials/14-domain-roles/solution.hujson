@@ -1,0 +1,15 @@
+{
+  "tagOwners": {
+    "tag:wiki": ["autogroup:admin"],
+    "tag:infra": ["autogroup:admin"]
+  },
+  "grants": [
+    { "src": ["user:*@corp.example"], "dst": ["tag:wiki"], "ip": ["tcp:443"] },
+    { "src": ["autogroup:admin"], "dst": ["tag:infra"], "ip": ["tcp:22"] }
+  ],
+  "tests": [
+    { "src": "bob@corp.example",     "accept": ["tag:wiki:443"], "deny": ["tag:infra:22"] },
+    { "src": "carol@contractor.dev", "deny":   ["tag:wiki:443", "tag:infra:22"] },
+    { "src": "alice@corp.example",   "accept": ["tag:wiki:443", "tag:infra:22"] }
+  ]
+}

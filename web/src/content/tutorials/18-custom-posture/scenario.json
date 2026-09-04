@@ -1,0 +1,72 @@
+{
+  "policy": "{\n  // node:os / node:tsVersion are built in (lesson 11). attrConfig lets you\n  // declare your OWN attributes; each device carries values for them in the\n  // snapshot (see the posture popover). Tailground compares them just like the\n  // node:* ones — string equality, numeric <>=, in [ … ], && / ||.\n  //\n  // No checklist — the tests block runs without posture. Watch the matrix and\n  // the posture panel:\n  //   1. define posture:trusted as  custom:env == 'prod'  AND  custom:riskScore < '50'\n  //   2. add  \"srcPosture\": [\"posture:trusted\"]  to the grant\n  //   Then only alice-trusted keeps access; alice-risky (score 90) and bob-dev\n  //   (env dev) are dropped.\n  \"attrConfig\": {\n    \"custom:env\": { \"type\": \"string\" },\n    \"custom:riskScore\": { \"type\": \"number\" },\n  },\n  \"postures\": {\n  },\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"tagOwners\": {\n    \"tag:secrets\": [\"group:eng\"],\n  },\n  \"grants\": [\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:secrets\"], \"ip\": [\"tcp:443\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      },
+      {
+        "id": 2,
+        "email": "bob@example.com"
+      }
+    ],
+    "groups": {
+      "group:eng": [
+        "alice@example.com",
+        "bob@example.com"
+      ]
+    },
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-trusted",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.1",
+        "os": "macos",
+        "posture": {
+          "custom:env": "prod",
+          "custom:riskScore": "10"
+        }
+      },
+      {
+        "id": 2,
+        "name": "alice-risky",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.2",
+        "os": "macos",
+        "posture": {
+          "custom:env": "prod",
+          "custom:riskScore": "90"
+        }
+      },
+      {
+        "id": 3,
+        "name": "bob-dev",
+        "user": "bob@example.com",
+        "ipv4": "100.64.0.3",
+        "os": "linux",
+        "posture": {
+          "custom:env": "dev",
+          "custom:riskScore": "5"
+        }
+      },
+      {
+        "id": 4,
+        "name": "secrets-1",
+        "tags": [
+          "tag:secrets"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    }
+  ]
+}

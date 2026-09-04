@@ -1,0 +1,73 @@
+{
+  "policy": "{\n  // Two shortcuts Tailground expands before compiling:\n  //   user:*@corp.example  — everyone whose email ends in that domain\n  //   autogroup:admin      — everyone whose snapshot role is owner or admin\n  // Add two grants:\n  //   1. anyone at corp.example reaches tag:wiki on 443\n  //   2. autogroup:admin reaches tag:infra on 22\n  \"tagOwners\": {\n    \"tag:wiki\": [\"autogroup:admin\"],\n    \"tag:infra\": [\"autogroup:admin\"],\n  },\n  \"grants\": [\n    // TODO\n  ],\n  \"tests\": [\n    { \"src\": \"bob@corp.example\",     \"accept\": [\"tag:wiki:443\"], \"deny\": [\"tag:infra:22\"] },\n    { \"src\": \"carol@contractor.dev\", \"deny\":   [\"tag:wiki:443\", \"tag:infra:22\"] },\n    { \"src\": \"alice@corp.example\",   \"accept\": [\"tag:wiki:443\", \"tag:infra:22\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@corp.example",
+        "role": "admin"
+      },
+      {
+        "id": 2,
+        "email": "bob@corp.example"
+      },
+      {
+        "id": 3,
+        "email": "carol@contractor.dev"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "alice-laptop",
+        "user": "alice@corp.example",
+        "ipv4": "100.64.0.1",
+        "os": "macos"
+      },
+      {
+        "id": 2,
+        "name": "bob-laptop",
+        "user": "bob@corp.example",
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "carol-laptop",
+        "user": "carol@contractor.dev",
+        "ipv4": "100.64.0.3",
+        "os": "windows"
+      },
+      {
+        "id": 4,
+        "name": "wiki-1",
+        "tags": [
+          "tag:wiki"
+        ],
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      },
+      {
+        "id": 5,
+        "name": "infra-1",
+        "tags": [
+          "tag:infra"
+        ],
+        "ipv4": "100.64.0.5",
+        "os": "linux"
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

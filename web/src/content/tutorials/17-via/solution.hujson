@@ -1,0 +1,9 @@
+{
+  "tagOwners": {
+    "tag:app": ["alice@example.com"],
+    "tag:relay": ["alice@example.com"]
+  },
+  "grants": [
+    { "src": ["tag:app"], "dst": ["10.99.0.0/24"], "ip": ["tcp:80"], "via": ["tag:relay"] }
+  ]
+}

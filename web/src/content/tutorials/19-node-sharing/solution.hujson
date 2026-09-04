@@ -1,0 +1,17 @@
+{
+  "tagOwners": {
+    "tag:srv": ["alice@example.com"],
+    "tag:client": ["alice@example.com"]
+  },
+  "externalTailnets": {
+    "partner": {
+      "externalID": "acme-42",
+      "allowIncomingConnections": true,
+      "allowExternalReferencesTo": ["tag:client"]
+    }
+  },
+  "grants": [
+    { "src": ["group://partner/eng"], "dst": ["tag:srv"], "ip": ["tcp:443"] },
+    { "src": ["tag://partner/relay"], "dst": ["tag:srv"], "ip": ["tcp:22"] }
+  ]
+}

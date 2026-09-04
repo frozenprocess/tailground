@@ -1,0 +1,18 @@
+{
+  "attrConfig": {
+    "custom:env": { "type": "string" },
+    "custom:riskScore": { "type": "number" }
+  },
+  "postures": {
+    "posture:trusted": ["custom:env == 'prod'", "custom:riskScore < '50'"]
+  },
+  "groups": {
+    "group:eng": ["alice@example.com", "bob@example.com"]
+  },
+  "tagOwners": {
+    "tag:secrets": ["group:eng"]
+  },
+  "grants": [
+    { "src": ["group:eng"], "srcPosture": ["posture:trusted"], "dst": ["tag:secrets"], "ip": ["tcp:443"] }
+  ]
+}

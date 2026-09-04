@@ -1,0 +1,14 @@
+{
+  "ipsets": {
+    "ipset:build-deps": ["100.64.0.20/32", "100.64.0.21/32"]
+  },
+  "tagOwners": {
+    "tag:ci": ["alice@example.com"]
+  },
+  "grants": [
+    { "src": ["tag:ci"], "dst": ["ipset:build-deps"], "ip": ["tcp:443"] }
+  ],
+  "tests": [
+    { "src": "tag:ci", "accept": ["100.64.0.20:443", "100.64.0.21:443"], "deny": ["100.64.0.20:22", "100.64.0.99:443"] }
+  ]
+}

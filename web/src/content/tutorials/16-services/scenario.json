@@ -1,0 +1,69 @@
+{
+  "policy": "{\n  // svc:payments is defined in the snapshot: a virtual IP (100.96.0.10) that\n  // fronts the backend devices api-1 and api-2. Tailground rewrites a svc:<name>\n  // destination to that VIP before compiling.\n  //\n  // Add a grant: tag:client reaches svc:payments on 443.\n  \"tagOwners\": {\n    \"tag:client\": [\"alice@example.com\"],\n    \"tag:api\": [\"alice@example.com\"],\n  },\n  \"grants\": [\n    // TODO\n  ],\n  \"tests\": [\n    { \"src\": \"tag:client\", \"accept\": [\"100.96.0.10:443\"], \"deny\": [\"100.96.0.10:22\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "client-1",
+        "tags": [
+          "tag:client"
+        ],
+        "ipv4": "100.64.0.1",
+        "os": "linux"
+      },
+      {
+        "id": 2,
+        "name": "api-1",
+        "tags": [
+          "tag:api"
+        ],
+        "ipv4": "100.64.0.2",
+        "os": "linux"
+      },
+      {
+        "id": 3,
+        "name": "api-2",
+        "tags": [
+          "tag:api"
+        ],
+        "ipv4": "100.64.0.3",
+        "os": "linux"
+      },
+      {
+        "id": 4,
+        "name": "outsider",
+        "user": "alice@example.com",
+        "ipv4": "100.64.0.4",
+        "os": "linux"
+      }
+    ],
+    "services": [
+      {
+        "name": "svc:payments",
+        "vip": "100.96.0.10",
+        "backends": [
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    },
+    {
+      "name": "ssh",
+      "proto": "tcp",
+      "port": 22
+    }
+  ]
+}

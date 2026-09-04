@@ -1,0 +1,5 @@
+{
+  "title": "Routing through a gateway",
+  "summary": "grants[].via forces traffic to a subnet through a specific node.",
+  "track": "Beyond the basics"
+}

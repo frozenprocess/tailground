@@ -1,0 +1,5 @@
+{
+  "title": "Custom device posture",
+  "summary": "Declare your own device attributes in attrConfig and gate rules on them.",
+  "track": "Beyond the basics"
+}

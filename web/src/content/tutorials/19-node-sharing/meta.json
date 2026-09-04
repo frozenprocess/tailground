@@ -1,0 +1,5 @@
+{
+  "title": "Declarative node sharing",
+  "summary": "Reference nodes another tailnet shares with yours, by group or tag.",
+  "track": "Beyond the basics"
+}

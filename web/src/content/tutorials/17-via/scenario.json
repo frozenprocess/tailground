@@ -1,0 +1,61 @@
+{
+  "policy": "{\n  // A grant's \"via\" list names gateway nodes that traffic must pass through to\n  // reach the dst. The gateway has to advertise (and have approved) a route\n  // covering the dst prefix. Reachability shows in the Routes & exit nodes panel\n  // as a route:<prefix>@<gateway> column.\n  //\n  // There's no checklist — watch the Routes panel and the matrix:\n  //   - app-1 -> route:10.99.0.0/24@relay is allowed on 80\n  //   - drop the \"via\" and app-1 reaches the prefix directly (still via the\n  //     approved route, but no gateway is enforced)\n  //   - change ip to tcp:443 and the route column goes red\n  \"tagOwners\": {\n    \"tag:app\": [\"alice@example.com\"],\n    \"tag:relay\": [\"alice@example.com\"],\n  },\n  \"grants\": [\n    { \"src\": [\"tag:app\"], \"dst\": [\"10.99.0.0/24\"], \"ip\": [\"tcp:80\"], \"via\": [\"tag:relay\"] },\n  ],\n}\n",
+  "snapshot": {
+    "users": [
+      {
+        "id": 1,
+        "email": "alice@example.com"
+      }
+    ],
+    "devices": [
+      {
+        "id": 1,
+        "name": "app-1",
+        "tags": [
+          "tag:app"
+        ],
+        "ipv4": "100.64.0.1",
+        "os": "linux"
+      },
+      {
+        "id": 2,
+        "name": "relay",
+        "tags": [
+          "tag:relay"
+        ],
+        "ipv4": "100.64.0.2",
+        "os": "linux",
+        "routes": [
+          "10.99.0.0/24"
+        ],
+        "routesApproved": [
+          "10.99.0.0/24"
+        ]
+      },
+      {
+        "id": 3,
+        "name": "relay-unapproved",
+        "tags": [
+          "tag:relay"
+        ],
+        "ipv4": "100.64.0.3",
+        "os": "linux",
+        "routes": [
+          "10.99.0.0/24"
+        ]
+      }
+    ]
+  },
+  "probes": [
+    {
+      "name": "http",
+      "proto": "tcp",
+      "port": 80
+    },
+    {
+      "name": "https",
+      "proto": "tcp",
+      "port": 443
+    }
+  ]
+}

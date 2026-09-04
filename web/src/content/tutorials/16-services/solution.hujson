@@ -1,0 +1,12 @@
+{
+  "tagOwners": {
+    "tag:client": ["alice@example.com"],
+    "tag:api": ["alice@example.com"]
+  },
+  "grants": [
+    { "src": ["tag:client"], "dst": ["svc:payments"], "ip": ["tcp:443"] }
+  ],
+  "tests": [
+    { "src": "tag:client", "accept": ["100.96.0.10:443"], "deny": ["100.96.0.10:22"] }
+  ]
+}

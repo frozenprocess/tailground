@@ -1,0 +1,5 @@
+{
+  "title": "Domain wildcards & roles",
+  "summary": "Match a whole email domain, or a tailnet admin role, without listing people.",
+  "track": "Beyond the basics"
+}

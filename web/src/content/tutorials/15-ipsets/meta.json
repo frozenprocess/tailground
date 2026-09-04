@@ -1,0 +1,5 @@
+{
+  "title": "ipsets",
+  "summary": "Name a set of off-tailnet addresses once and reuse it as a destination.",
+  "track": "Beyond the basics"
+}

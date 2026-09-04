@@ -1,0 +1,5 @@
+{
+  "title": "Tailscale Services",
+  "summary": "A svc: destination resolves to one virtual IP fronting several backends.",
+  "track": "Beyond the basics"
+}
