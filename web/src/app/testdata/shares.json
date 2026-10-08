@@ -1,0 +1,244 @@
+[
+  {
+    "name": "defaults",
+    "state": {
+      "policy": "{\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"grants\": [\n    // Engineers can reach the app servers on HTTPS.\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:app\"], \"ip\": [\"tcp:443\"] },\n    // App servers can reach the database.\n    { \"src\": [\"tag:app\"], \"dst\": [\"tag:db\"], \"ip\": [\"tcp:5432\"] },\n  ],\n  \"tagOwners\": {\n    \"tag:app\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"],\n  },\n}\n",
+      "snapshot": {
+        "users": [
+          {
+            "id": 1,
+            "email": "alice@example.com"
+          },
+          {
+            "id": 2,
+            "email": "bob@example.com"
+          }
+        ],
+        "groups": {
+          "group:eng": [
+            "alice@example.com",
+            "bob@example.com"
+          ]
+        },
+        "devices": [
+          {
+            "id": 1,
+            "name": "alice-laptop",
+            "user": "alice@example.com",
+            "ipv4": "100.64.0.1",
+            "ipv6": "fd7a:115c:a1e0::1",
+            "os": "macos"
+          },
+          {
+            "id": 2,
+            "name": "bob-laptop",
+            "user": "bob@example.com",
+            "ipv4": "100.64.0.2",
+            "ipv6": "fd7a:115c:a1e0::2",
+            "os": "linux"
+          },
+          {
+            "id": 3,
+            "name": "app-1",
+            "tags": [
+              "tag:app"
+            ],
+            "ipv4": "100.64.0.3",
+            "ipv6": "fd7a:115c:a1e0::3",
+            "os": "linux"
+          },
+          {
+            "id": 4,
+            "name": "db-1",
+            "tags": [
+              "tag:db"
+            ],
+            "ipv4": "100.64.0.4",
+            "ipv6": "fd7a:115c:a1e0::4",
+            "os": "linux"
+          }
+        ]
+      },
+      "probes": [
+        {
+          "name": "ssh",
+          "proto": "tcp",
+          "port": 22
+        },
+        {
+          "name": "http",
+          "proto": "tcp",
+          "port": 80
+        },
+        {
+          "name": "https",
+          "proto": "tcp",
+          "port": 443
+        },
+        {
+          "name": "postgres",
+          "proto": "tcp",
+          "port": 5432
+        },
+        {
+          "name": "dns",
+          "proto": "udp",
+          "port": 53
+        },
+        {
+          "name": "icmp",
+          "proto": "icmp"
+        }
+      ],
+      "sshUsers": [
+        "root",
+        "ubuntu"
+      ]
+    },
+    "token": "7VgxCoAwDPyKODv4H89FHHRxchP_7l0T1NoOCo5FkHLGuzRNbmhXb1iqCt4GUKcKOCH1g9AO6dGBo49ndcGcxLCHt1g0_0YRiL86gP21kYoz6ancUuMUQpPpX7z6js9cGGxuQNgTe-sHOfVYI9Yeh5y0vOHStgKFePOHqOwne7rTe4iE8hES2cF7o2IXxS7-tYumDU89rSubQOv-AA",
+    "decoded": {
+      "policy": "{\n  \"groups\": {\n    \"group:eng\": [\"alice@example.com\", \"bob@example.com\"],\n  },\n  \"grants\": [\n    // Engineers can reach the app servers on HTTPS.\n    { \"src\": [\"group:eng\"], \"dst\": [\"tag:app\"], \"ip\": [\"tcp:443\"] },\n    // App servers can reach the database.\n    { \"src\": [\"tag:app\"], \"dst\": [\"tag:db\"], \"ip\": [\"tcp:5432\"] },\n  ],\n  \"tagOwners\": {\n    \"tag:app\": [\"group:eng\"],\n    \"tag:db\": [\"group:eng\"],\n  },\n}\n",
+      "snapshot": {
+        "users": [
+          {
+            "id": 1,
+            "email": "alice@example.com"
+          },
+          {
+            "id": 2,
+            "email": "bob@example.com"
+          }
+        ],
+        "groups": {
+          "group:eng": [
+            "alice@example.com",
+            "bob@example.com"
+          ]
+        },
+        "devices": [
+          {
+            "id": 1,
+            "name": "alice-laptop",
+            "user": "alice@example.com",
+            "ipv4": "100.64.0.1",
+            "ipv6": "fd7a:115c:a1e0::1",
+            "os": "macos"
+          },
+          {
+            "id": 2,
+            "name": "bob-laptop",
+            "user": "bob@example.com",
+            "ipv4": "100.64.0.2",
+            "ipv6": "fd7a:115c:a1e0::2",
+            "os": "linux"
+          },
+          {
+            "id": 3,
+            "name": "app-1",
+            "tags": [
+              "tag:app"
+            ],
+            "ipv4": "100.64.0.3",
+            "ipv6": "fd7a:115c:a1e0::3",
+            "os": "linux"
+          },
+          {
+            "id": 4,
+            "name": "db-1",
+            "tags": [
+              "tag:db"
+            ],
+            "ipv4": "100.64.0.4",
+            "ipv6": "fd7a:115c:a1e0::4",
+            "os": "linux"
+          }
+        ]
+      },
+      "probes": [
+        {
+          "name": "ssh",
+          "proto": "tcp",
+          "port": 22
+        },
+        {
+          "name": "http",
+          "proto": "tcp",
+          "port": 80
+        },
+        {
+          "name": "https",
+          "proto": "tcp",
+          "port": 443
+        },
+        {
+          "name": "postgres",
+          "proto": "tcp",
+          "port": 5432
+        },
+        {
+          "name": "dns",
+          "proto": "udp",
+          "port": 53
+        },
+        {
+          "name": "icmp",
+          "proto": "icmp"
+        }
+      ],
+      "sshUsers": [
+        "root",
+        "ubuntu"
+      ],
+      "view": "matrix",
+      "activeProbe": "https",
+      "grouping": "user",
+      "activeLesson": null
+    }
+  },
+  {
+    "name": "unicode-custom",
+    "state": {
+      "policy": "// café 日本語 🌲\n{\"acls\":[]}",
+      "snapshot": {
+        "users": [],
+        "devices": []
+      },
+      "probes": [
+        {
+          "name": "custom",
+          "proto": "udp",
+          "port": 1234
+        }
+      ],
+      "sshUsers": [
+        "alice"
+      ],
+      "view": "tutorials",
+      "activeProbe": "custom",
+      "grouping": "tag",
+      "activeLesson": "intro"
+    },
+    "token": "i1YCZovkxLTDKxWeTV_6bM6aF6vmKXyY37MpJq86BjypGwO0LbZWCegeWNpD6aMA0wAw5mHlWmlxCTh8gZ26knygQGkKKBoK8ouAGcfQyNgEmOCgSQvocmCkwTQAmcCJ1KJ8pVgA",
+    "decoded": {
+      "policy": "// café 日本語 🌲\n{\"acls\":[]}",
+      "snapshot": {
+        "users": [],
+        "devices": []
+      },
+      "probes": [
+        {
+          "name": "custom",
+          "proto": "udp",
+          "port": 1234
+        }
+      ],
+      "sshUsers": [
+        "alice"
+      ],
+      "view": "tutorials",
+      "activeProbe": "custom",
+      "grouping": "tag",
+      "activeLesson": "intro"
+    }
+  }
+]
