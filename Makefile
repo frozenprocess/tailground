@@ -5,7 +5,15 @@ TRIM_STUB  := engine/vendor-trim/config.go.stub
 TRIM_DEST  := vendor/github.com/juanfont/headscale/hscontrol/types/config.go
 CAP_PATCH  := engine/vendor-trim/capabilities.patch
 
-.PHONY: help vendor test build wasm wasm-exec size spike web-install web-dev web-build e2e e2e-offline e2e-engine e2e-down clean
+IMAGE_REPO := ghcr.io/frozenprocess/tailground
+# Every build is pushed twice: as :latest (what the cluster runs) and as a
+# unique <timestamp>-<sha> tag (the archive, for rollbacks). `:=` freezes the
+# timestamp so both tags in one make invocation match.
+TAG        ?= $(shell date +%Y%m%d-%H%M%S)-$(shell git rev-parse --short HEAD)
+TAG        := $(TAG)
+IMAGE      := $(IMAGE_REPO):$(TAG)
+
+.PHONY: help vendor test build wasm wasm-exec size spike web-install web-dev web-build e2e e2e-offline e2e-engine e2e-down image image-push clean
 
 help:
 	@echo "Tailground:"
@@ -22,6 +30,8 @@ help:
 	@echo "  make e2e-offline - PR-safe offline harness allowlist (never selects live tests)"
 	@echo "  make e2e-engine  - offline: score every case against its authored expect (no creds/Docker)"
 	@echo "  make e2e-down    - delete every child tailnet the harness owns"
+	@echo "  make image       - build the deploy container image ($(IMAGE))"
+	@echo "  make image-push  - build + push the image"
 
 vendor:
 	$(GO) mod vendor
@@ -84,6 +94,14 @@ e2e-engine:
 e2e-down:
 	@set -a; [ -f .env ] && . ./.env; [ -f e2e/.run/creds.env ] && . e2e/.run/creds.env; set +a; \
 	 E2E_REAP=1 $(GO) test -tags e2e -count=1 -v -run TestReap ./e2e/...
+
+## deploy — container image + Kubernetes (see deploy/README.md)
+image:
+	docker build -f deploy/Dockerfile -t $(IMAGE) -t $(IMAGE_REPO):latest .
+
+image-push: image
+	docker push $(IMAGE)
+	docker push $(IMAGE_REPO):latest
 
 clean:
 	rm -rf bin $(WASM_OUT) $(WASM_EXEC) web/dist
