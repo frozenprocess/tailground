@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tailground
+  namespace: tailground
+  labels:
+    app.kubernetes.io/name: tailground
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: tailground
+    app.kubernetes.io/component: web
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

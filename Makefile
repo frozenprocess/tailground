@@ -13,7 +13,7 @@ TAG        ?= $(shell date +%Y%m%d-%H%M%S)-$(shell git rev-parse --short HEAD)
 TAG        := $(TAG)
 IMAGE      := $(IMAGE_REPO):$(TAG)
 
-.PHONY: help vendor test build wasm wasm-exec size spike web-install web-dev web-build e2e e2e-offline e2e-engine e2e-down image image-push clean
+.PHONY: help test build wasm wasm-exec size spike vendor clean web-install web-dev web-build e2e e2e-engine e2e-offline e2e-down image image-push require-host k8s-gateway k8s-deploy k8s-rollback k8s-backup
 
 help:
 	@echo "Tailground:"
@@ -32,6 +32,11 @@ help:
 	@echo "  make e2e-down    - delete every child tailnet the harness owns"
 	@echo "  make image       - build the deploy container image ($(IMAGE))"
 	@echo "  make image-push  - build + push the image"
+	@echo "  make k8s-gateway - add the tailground listener to the cluster gateway (once)"
+	@echo "  make k8s-deploy  - kubectl apply -k deploy/k8s, restart onto :latest, wait for rollout"
+	@echo "  make k8s-backup - download a consistent snapshot of the short-link DB into backups/"
+	@echo "  make k8s-rollback TAG=... - re-point :latest at an archived build, then k8s-deploy"
+	@echo "  (ship a fresh build: make image-push k8s-deploy)"
 
 vendor:
 	$(GO) mod vendor
@@ -102,6 +107,58 @@ image:
 image-push: image
 	docker push $(IMAGE)
 	docker push $(IMAGE_REPO):latest
+
+# Deploy settings, substituted into deploy/k8s/*.yaml via envsubst. Override on
+# the command line or from the environment, e.g.
+#   make k8s-deploy TAILGROUND_HOST=tailground.example.com
+TAILGROUND_HOST   ?=
+IMAGE_TAG         ?= latest
+GATEWAY_NAME      ?= cluster-gateway
+GATEWAY_NAMESPACE ?= default
+STORAGE_SIZE      ?= 1Gi
+# Empty = the cluster's default StorageClass.
+STORAGE_CLASS     ?=
+
+K8S_VARS := TAILGROUND_HOST IMAGE_REPO IMAGE_TAG GATEWAY_NAME GATEWAY_NAMESPACE STORAGE_SIZE STORAGE_CLASS
+export $(K8S_VARS)
+K8S_ENVSUBST := envsubst '$(foreach v,$(K8S_VARS),$$$(v))'
+
+require-host:
+	@test -n "$(TAILGROUND_HOST)" || { echo "set TAILGROUND_HOST=<hostname>"; exit 1; }
+
+k8s-gateway: require-host
+	$(K8S_ENVSUBST) < deploy/k8s/gateway-listener-patch.yaml > $(or $(TMPDIR),/tmp)/tg-gw-patch.yaml
+	kubectl patch gateway $(GATEWAY_NAME) -n $(GATEWAY_NAMESPACE) \
+	  --type=json --patch-file $(or $(TMPDIR),/tmp)/tg-gw-patch.yaml
+
+# With IMAGE_TAG=latest (imagePullPolicy: Always) the spec never changes between
+# builds, so force a rollout to make the pods re-pull.
+k8s-deploy: require-host
+	kubectl kustomize deploy/k8s | $(K8S_ENVSUBST) | kubectl apply -f -
+	kubectl -n tailground rollout restart deploy/tailground
+	kubectl -n tailground rollout status deploy/tailground
+
+# Re-point :latest at an archived build (registry-side, no pull), then roll.
+k8s-rollback:
+	@test -n "$(filter command line,$(origin TAG))" || { echo "usage: make k8s-rollback TAG=<timestamp>-<sha>"; exit 1; }
+	docker buildx imagetools create -t $(IMAGE_REPO):latest $(IMAGE)
+	$(MAKE) k8s-deploy
+
+# Download the production short-link database. The API takes a consistent
+# snapshot itself (VACUUM INTO — safe while serving, unlike copying the WAL-mode
+# file), it is streamed down, and the remote copy is removed. Needs an image
+# that has the -backup flag (any build from 04311b6 onward).
+BACKUP_DIR  ?= backups
+BACKUP_FILE := $(BACKUP_DIR)/shares-$(shell date -u +%Y%m%dT%H%M%SZ).db
+# kubectl honours $KUBECONFIG from the environment (or `make k8s-backup KUBECONFIG=...`).
+k8s-backup:
+	@mkdir -p $(BACKUP_DIR)
+	kubectl -n tailground exec deploy/tailground -c api -- \
+	  sh -c 'rm -f /data/backup.tmp.db && /usr/local/bin/tailground-api -db /data/shares.db -backup /data/backup.tmp.db'
+	kubectl -n tailground exec deploy/tailground -c api -- cat /data/backup.tmp.db > $(BACKUP_FILE).part
+	kubectl -n tailground exec deploy/tailground -c api -- rm -f /data/backup.tmp.db
+	@mv $(BACKUP_FILE).part $(BACKUP_FILE)
+	@echo "wrote $(BACKUP_FILE) ($$(wc -c < $(BACKUP_FILE)) bytes)"
 
 clean:
 	rm -rf bin $(WASM_OUT) $(WASM_EXEC) web/dist

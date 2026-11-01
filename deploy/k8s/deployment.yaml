@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailground
+  namespace: tailground
+  labels:
+    app.kubernetes.io/name: tailground
+    app.kubernetes.io/component: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tailground
+      app.kubernetes.io/component: web
+  # The SQLite file lives on a ReadWriteOnce volume with a single writer, so the
+  # old pod must stop before the new one starts (a few seconds of downtime).
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tailground
+        app.kubernetes.io/component: web
+    spec:
+      securityContext:
+        # nginx-unprivileged runs as uid/gid 101; let it own the data volume.
+        fsGroup: 101
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: tailground-data
+        # nginx-unprivileged's only writable paths (pid file, temp/cache dirs).
+        - name: nginx-tmp
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+      # Image is public; if you make the GHCR package private, create a pull
+      # secret and reference it here:
+      #   kubectl -n tailground create secret docker-registry ghcr-pull \
+      #     --docker-server=ghcr.io --docker-username=frozenprocess \
+      #     --docker-password=<GHCR_PAT_read:packages>
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: web
+          image: ${IMAGE_REPO}:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          volumeMounts:
+            - name: nginx-tmp
+              mountPath: /tmp
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+        # Short share links: stores scenarios in SQLite, expires unused ones
+        # after a year. nginx (above) proxies /api/ here on localhost:8081.
+        - name: api
+          image: ${IMAGE_REPO}:${IMAGE_TAG}
+          imagePullPolicy: Always
+          command:
+            - /usr/local/bin/tailground-api
+            - -addr=127.0.0.1:8081
+            - -db=/data/shares.db
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          # Loopback-only listener: kubelet httpGet probes hit the pod IP and
+          # can't reach it, so probe from inside the container.
+          readinessProbe:
+            exec:
+              command: ["wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/api/healthz"]
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/api/healthz"]
+            initialDelaySeconds: 5
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]

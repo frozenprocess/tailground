@@ -1,0 +1,19 @@
+# Only the web port is reachable inside the cluster. The API sidecar is bound
+# to loopback already; this is the second layer, so nothing in another pod can
+# talk to it (or forge the client-IP headers it rate-limits on) directly.
+# Port-scoped rather than source-scoped: the gateway's namespace is owned by
+# another stack. Needs a CNI that enforces NetworkPolicy.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tailground-web-only
+  namespace: tailground
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: tailground
+  policyTypes: [Ingress]
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8080

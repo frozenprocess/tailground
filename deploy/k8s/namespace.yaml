@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tailground
+  labels:
+    # The cluster gateway's tailground-web listener selects namespaces by this
+    # label (k8s injects it automatically, declared here for clarity).
+    kubernetes.io/metadata.name: tailground
+    app.kubernetes.io/name: tailground

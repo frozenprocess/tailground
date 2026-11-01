@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tailground-data
+  namespace: tailground
+  labels:
+    app.kubernetes.io/name: tailground
+spec:
+  accessModes: ["ReadWriteOnce"]
+  # Empty STORAGE_CLASS renders as null = the cluster default class.
+  storageClassName: ${STORAGE_CLASS}
+  # Default StorageClass (k3s local-path). Note its reclaim policy is Delete:
+  # removing this claim removes every stored share link.
+  resources:
+    requests:
+      storage: ${STORAGE_SIZE}

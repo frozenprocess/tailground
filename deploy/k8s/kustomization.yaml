@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Namespaced resources only. The cluster-gateway listener lives in the `default`
+# namespace and is owned by the peacha stack — patch it separately, once:
+#   make k8s-gateway TAILGROUND_HOST=<hostname>
+# Manifests contain ${VAR} placeholders (see the Makefile), so deploy with
+# `make k8s-deploy`, not a bare `kubectl apply -k`.
+
+resources:
+  - namespace.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - networkpolicy.yaml
+  - httproute.yaml
