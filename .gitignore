@@ -3,6 +3,7 @@
 /web/public/wasm_exec.js
 /web/node_modules/
 /web/dist/
+/web/tsconfig.tsbuildinfo
 *.test
 vendor/
 /e2e/.run/
