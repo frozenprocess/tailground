@@ -61,6 +61,42 @@
   line-height: 1;
 }
 
+/* Top-bar link to the GitHub repo (an <a> styled as .btn). */
+.github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 5px 10px;
+  text-decoration: none;
+}
+
+/* GitHub mark and star share one cell; GitHubButton toggles .show-star on a
+   timer. Transitions (not keyframes) so the global reduced-motion rule makes
+   the swap instant rather than stopping it. */
+.github-btn-icons {
+  display: inline-grid;
+  width: 14px;
+  height: 14px;
+}
+.github-btn-icons > svg {
+  grid-area: 1 / 1;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.github-btn-icons > .github-star {
+  color: #e3b341;
+  opacity: 0;
+  transform: scale(0.6) rotate(-30deg);
+}
+.github-btn.show-star .github-mark {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.github-btn.show-star .github-star {
+  opacity: 1;
+  transform: none;
+}
+
 .share {
   display: flex;
   align-items: center;
@@ -440,6 +476,10 @@
   }
   .topbar .status {
     font-size: 11px;
+  }
+  /* icon only on narrow screens */
+  .github-btn-label {
+    display: none;
   }
   /* keep the LED, drop the wordy engine-status / timing text */
   .topbar .status > span:not(.led) {

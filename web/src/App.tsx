@@ -13,6 +13,7 @@ import { TourNote } from "./tutorials/TourNote";
 import { ShareBanner, ShareButton, ShareConsent } from "./app/Share";
 import { ThemeToggle } from "./app/ThemeToggle";
 import { AboutButton } from "./app/AboutButton";
+import { GitHubButton } from "./app/GitHubButton";
 import { useThemeSync } from "./app/useTheme";
 import { Panel } from "./ui/Panel";
 import { ImpactTabs } from "./impact/ImpactTabs";
@@ -83,6 +84,7 @@ export function App() {
                 : "loading engine…"}
           </span>
         </span>
+        <GitHubButton />
       </div>
 
       <ShareBanner />
