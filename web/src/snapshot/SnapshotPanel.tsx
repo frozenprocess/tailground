@@ -7,6 +7,7 @@ import { usePaneMax } from "../app/usePaneMax";
 import { usePanelCollapse } from "../app/usePanelCollapse";
 import { LeftTabs } from "../app/LeftTabs";
 import { SnapshotJson } from "./SnapshotJson";
+import { ImportTailnetButton } from "./ImportTailnet";
 import { DevicesSection, ExternalSection, ServicesSection, UsersSection } from "./Sections";
 import { GroupsHostsEditor } from "./GroupsHostsEditor";
 
@@ -43,6 +44,7 @@ export function SnapshotPanel() {
               JSON
             </button>
           </div>
+          <ImportTailnetButton />
         </div>
       }
     >
