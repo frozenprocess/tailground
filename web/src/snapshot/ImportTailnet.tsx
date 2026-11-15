@@ -41,6 +41,20 @@ export function ImportTailnetButton() {
   );
 }
 
+type Parsed = { ok: ImportResult } | { err: string } | null;
+
+/** Parse the pasted text as the user types; empty input is neither a result nor an error. */
+function useParsedImport(text: string): Parsed {
+  return useMemo(() => {
+    if (!text.trim()) return null;
+    try {
+      return { ok: parseTailnetImport(text) };
+    } catch (e) {
+      return { err: e instanceof ImportError ? e.message : "Couldn't read that." };
+    }
+  }, [text]);
+}
+
 function ImportModal({ onClose }: { onClose: () => void }) {
   const snapshot = useStore((s) => s.snapshot);
   const setSnapshot = useStore((s) => s.setSnapshot);
@@ -58,14 +72,7 @@ function ImportModal({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const parsed = useMemo<{ ok: ImportResult } | { err: string } | null>(() => {
-    if (!text.trim()) return null;
-    try {
-      return { ok: parseTailnetImport(text) };
-    } catch (e) {
-      return { err: e instanceof ImportError ? e.message : "Couldn't read that." };
-    }
-  }, [text]);
+  const parsed = useParsedImport(text);
   const result = parsed && "ok" in parsed ? parsed.ok : null;
 
   const command = method === "api" ? API_COMMAND : CLI_COMMAND;
@@ -106,21 +113,7 @@ function ImportModal({ onClose }: { onClose: () => void }) {
 
         <MethodTabs method={method} onChange={setMethod} />
 
-        {method === "api" ? (
-          <p className="import-hint">
-            Needs an <a href="https://login.tailscale.com/admin/settings/oauth" target="_blank" rel="noopener noreferrer">OAuth client</a> with
-            only the read-only <code>devices:core:read</code>, <code>users:read</code> and{" "}
-            <code>services:read</code> scopes (and <code>jq</code>). Without the last two you still get
-            the devices, just no roles or services. Replace{" "}
-            <code>YOUR_CLIENT_ID</code>; the secret is prompted for. The device list is saved to{" "}
-            <code>tailnet.json</code> (devices, users and services; no credentials).
-          </p>
-        ) : (
-          <p className="import-hint">
-            Run on any machine in the tailnet. No credentials needed, but it only lists the devices that
-            machine can see, and reports only approved subnet routes.
-          </p>
-        )}
+        <MethodHint method={method} />
 
         <CommandBox command={command} />
 
@@ -171,6 +164,24 @@ function ImportModal({ onClose }: { onClose: () => void }) {
       </div>
     </div>,
     document.body,
+  );
+}
+
+function MethodHint({ method }: { method: Method }) {
+  return method === "api" ? (
+    <p className="import-hint">
+      Needs an <a href="https://login.tailscale.com/admin/settings/oauth" target="_blank" rel="noopener noreferrer">OAuth client</a> with
+      only the read-only <code>devices:core:read</code>, <code>users:read</code> and{" "}
+      <code>services:read</code> scopes (and <code>jq</code>). Without the last two you still get
+      the devices, just no roles or services. Replace{" "}
+      <code>YOUR_CLIENT_ID</code>; the secret is prompted for. The device list is saved to{" "}
+      <code>tailnet.json</code> (devices, users and services; no credentials).
+    </p>
+  ) : (
+    <p className="import-hint">
+      Run on any machine in the tailnet. No credentials needed, but it only lists the devices that
+      machine can see, and reports only approved subnet routes.
+    </p>
   );
 }
 
