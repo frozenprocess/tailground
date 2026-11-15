@@ -49,36 +49,58 @@ export function addTagOwners(policy: string, tags: string[], owner?: string): st
   const root = parseTree(policy, errors, JSONC);
   if (errors.length > 0 || !root || root.type !== "object") return policy;
 
-  const value = JSON.stringify(owner ? [owner] : []);
-  const entry = (tag: string) => `${JSON.stringify(tag)}: ${value}`;
-  const rootIndent = lineIndent(policy, root.offset);
-  const firstProp = root.children?.[0];
-  const unit = (firstProp && lineIndent(policy, firstProp.offset).slice(rootIndent.length)) || "  ";
-
   const prop = root.children?.find((p) => p.children?.[0]?.value === "tagOwners");
   const owners: Node | undefined = prop?.children?.[1];
-  const isBlank = (n: Node) => policy.slice(n.offset + 1, n.offset + n.length - 1).trim() === "";
-  const splice = (from: number, to: number, text: string) => policy.slice(0, from) + text + policy.slice(to);
-
   if (prop && owners?.type !== "object") return policy; // something we don't understand
 
-  if (owners) {
-    const ind = lineIndent(policy, owners.offset) + unit;
-    if (owners.children?.length || !isBlank(owners)) {
-      // Entries (or comments) already there: put ours first, each with a trailing comma.
-      return splice(owners.offset + 1, owners.offset + 1, tags.map((t) => `\n${ind}${entry(t)},`).join(""));
-    }
-    const close = lineIndent(policy, owners.offset);
-    const body = tags.map((t) => `${ind}${entry(t)}`).join(",\n");
-    return splice(owners.offset, owners.offset + owners.length, `{\n${body}\n${close}}`);
+  const edit = new PolicyEdit(policy, root, tags, JSON.stringify(owner ? [owner] : []));
+  return owners ? edit.intoTagOwners(owners) : edit.newTagOwners();
+}
+
+/** The text edits behind addTagOwners, sharing the policy's own indentation. */
+class PolicyEdit {
+  private readonly rootIndent: string;
+  /** one indentation level, copied from the policy's first property */
+  private readonly unit: string;
+
+  constructor(
+    private readonly policy: string,
+    private readonly root: Node,
+    private readonly tags: string[],
+    private readonly value: string,
+  ) {
+    this.rootIndent = lineIndent(policy, root.offset);
+    const first = root.children?.[0];
+    this.unit = (first && lineIndent(policy, first.offset).slice(this.rootIndent.length)) || "  ";
   }
 
-  // No tagOwners yet.
-  const ind = rootIndent + unit;
-  if (root.children?.length || !isBlank(root)) {
-    const body = tags.map((t) => `${ind}${unit}${entry(t)},`).join("\n");
-    return splice(root.offset + 1, root.offset + 1, `\n${ind}"tagOwners": {\n${body}\n${ind}},`);
+  /** tagOwners exists: put the new entries first. */
+  intoTagOwners(owners: Node): string {
+    const ind = lineIndent(this.policy, owners.offset) + this.unit;
+    if (owners.children?.length || !this.isBlank(owners)) {
+      // Entries (or comments) already there: ours go first, each with a trailing comma.
+      return this.splice(owners.offset + 1, owners.offset + 1, this.tags.map((t) => `\n${ind}${this.entry(t)},`).join(""));
+    }
+    const close = lineIndent(this.policy, owners.offset);
+    const body = this.tags.map((t) => `${ind}${this.entry(t)}`).join(",\n");
+    return this.splice(owners.offset, owners.offset + owners.length, `{\n${body}\n${close}}`);
   }
-  const body = tags.map((t) => `${ind}${unit}${entry(t)}`).join(",\n");
-  return splice(root.offset, root.offset + root.length, `{\n${ind}"tagOwners": {\n${body}\n${ind}}\n${rootIndent}}`);
+
+  /** No tagOwners yet: add the whole object to the root. */
+  newTagOwners(): string {
+    const { root, unit, rootIndent } = this;
+    const ind = rootIndent + unit;
+    if (root.children?.length || !this.isBlank(root)) {
+      const body = this.tags.map((t) => `${ind}${unit}${this.entry(t)},`).join("\n");
+      return this.splice(root.offset + 1, root.offset + 1, `\n${ind}"tagOwners": {\n${body}\n${ind}},`);
+    }
+    const body = this.tags.map((t) => `${ind}${unit}${this.entry(t)}`).join(",\n");
+    return this.splice(root.offset, root.offset + root.length, `{\n${ind}"tagOwners": {\n${body}\n${ind}}\n${rootIndent}}`);
+  }
+
+  private entry = (tag: string) => `${JSON.stringify(tag)}: ${this.value}`;
+  /** an object with nothing between its braces, not even a comment */
+  private isBlank = (n: Node) => this.policy.slice(n.offset + 1, n.offset + n.length - 1).trim() === "";
+  private splice = (from: number, to: number, text: string) =>
+    this.policy.slice(0, from) + text + this.policy.slice(to);
 }

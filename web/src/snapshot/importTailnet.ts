@@ -1,4 +1,4 @@
-import type { Device, Service, Snapshot } from "../engine/types";
+import type { Device, Service, Snapshot, SnapshotUser } from "../engine/types";
 import { isObj, str, strList, type Obj } from "./json";
 
 // Convert pasted Tailscale output into snapshot devices. Everything here runs in
@@ -213,11 +213,14 @@ function apiServices(list: unknown): Service[] {
     if (!isObj(e)) continue;
     const name = str(e.name);
     const addrs = strList(e.addrs);
-    const vip = addrs.find((a) => a.includes(".")) ?? addrs[0];
+    const vip = pickVip(addrs);
     if (name && vip && !found.has(serviceKey(name))) found.set(serviceKey(name), { name, vip });
   }
   return [...found.values()];
 }
+
+/** A service's VIP: the IPv4 address if there is one, else the first. */
+const pickVip = (addrs: string[]): string | undefined => addrs.find((a) => a.includes(".")) ?? addrs[0];
 
 /** Service name without its "svc:" prefix, lower-cased: the key services merge on. */
 export const serviceKey = (name: string): string => name.replace(/^svc:/i, "").toLowerCase();
@@ -237,7 +240,7 @@ function servicesFrom(nodes: Obj[]): Service[] {
         if (!isObj(e)) continue;
         const name = str(e.Name) || `svc:${cap.slice("services/".length)}`;
         const addrs = strList(e.Addrs);
-        const vip = addrs.find((a) => a.includes(".")) ?? addrs[0];
+        const vip = pickVip(addrs);
         if (!vip || found.has(serviceKey(name))) continue;
         found.set(serviceKey(name), { name, vip });
       }
@@ -281,24 +284,32 @@ function finish(
  * say which devices back a service); pick them again in the Services section.
  */
 export function applyImport(snapshot: Snapshot, result: ImportResult): Snapshot {
-  const known = new Set(snapshot.users.map((u) => u.email));
-  let nextId = snapshot.users.reduce((m, u) => Math.max(m, u.id), 0) + 1;
-  const roleOf = new Map(result.roles.map((r) => [r.email, r.role]));
-  // Users holding a role count even when they own no device.
-  const wanted = [...result.owners, ...result.roles.map((r) => r.email)];
-  const added = [...new Set(wanted)]
-    .filter((e) => !known.has(e))
-    .map((email) => ({ id: nextId++, email, ...(roleOf.has(email) ? { role: roleOf.get(email) } : {}) }));
-  // A role read from the paste is the real one, so it replaces what the snapshot had.
-  const users = snapshot.users.map((u) => (roleOf.has(u.email) ? { ...u, role: roleOf.get(u.email) } : u));
   const next: Snapshot = {
     ...snapshot,
-    users: [...users, ...added],
+    users: mergeUsers(snapshot.users, result),
     devices: result.devices,
   };
   const services = mergeServices(snapshot.services ?? [], result.services);
   if (services.length > 0) next.services = services;
   return next;
+}
+
+/**
+ * Existing users keep their place; one whose role the import reports takes that
+ * role (a role read from real data beats what the snapshot had). Device owners
+ * and role holders the snapshot doesn't have yet are appended with fresh ids.
+ */
+function mergeUsers(existing: SnapshotUser[], result: ImportResult): SnapshotUser[] {
+  const roleOf = new Map(result.roles.map((r) => [r.email, r.role]));
+  const known = new Set(existing.map((u) => u.email));
+  let nextId = existing.reduce((m, u) => Math.max(m, u.id), 0) + 1;
+  const updated = existing.map((u) => (roleOf.has(u.email) ? { ...u, role: roleOf.get(u.email) } : u));
+  // Users holding a role count even when they own no device.
+  const wanted = new Set([...result.owners, ...roleOf.keys()]);
+  const added = [...wanted]
+    .filter((email) => !known.has(email))
+    .map((email): SnapshotUser => ({ id: nextId++, email, ...(roleOf.has(email) ? { role: roleOf.get(email) } : {}) }));
+  return [...updated, ...added];
 }
 
 /** Merge imported services into existing ones by name; backends are cleared. */
