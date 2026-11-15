@@ -2,15 +2,8 @@ import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { useStore } from "../state/store";
 import type { Snapshot } from "../engine/types";
-import {
-  addTagOwners,
-  applyImport,
-  serviceKey,
-  ImportError,
-  parseTailnetImport,
-  undefinedTags,
-  type ImportResult,
-} from "./importTailnet";
+import { applyImport, serviceKey, ImportError, parseTailnetImport, type ImportResult } from "./importTailnet";
+import { addTagOwners, undefinedTags } from "./tagOwners";
 
 type Method = "api" | "cli";
 
