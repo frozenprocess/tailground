@@ -1,6 +1,6 @@
 --- a/hscontrol/policy/v2/types.go
 +++ b/hscontrol/policy/v2/types.go
-@@ -2277,6 +2277,10 @@
+@@ -2277,6 +2277,14 @@
  	// tailscale.com/cap/secrets is the capability used by setec
  	// (github.com/tailscale/setec); allow it so it can be granted via policy.
  	peercap.Cap("tailscale.com/cap/secrets"): true,
@@ -8,6 +8,10 @@
 +	// tailscale.com/cap/aperture is granted to Aperture gateway users; the
 +	// Tailscale control plane accepts it, so Tailground must too.
 +	peercap.Cap("tailscale.com/cap/aperture"): true,
++
++	// tailscale.com/cap/pam is added to the default policy when PAM is enabled;
++	// the Tailscale control plane accepts it, so Tailground must too.
++	peercap.Cap("tailscale.com/cap/pam"): true,
  }
  
  // validateGrantSrcDstCombination validates [Grant]-specific source/destination
